@@ -10,7 +10,7 @@ FW.World = class World
 
     # CAMERA
     FW.camera = new THREE.PerspectiveCamera(45.0, @SCREEN_WIDTH / @SCREEN_HEIGHT, 1, @camFar)
-    FW.camera.position.set 0, 40, 1000
+    FW.camera.position.set 0, 0, 100
     
     #CONTROLS
     # @controls = new THREE.PathControls(FW.camera)
@@ -76,7 +76,7 @@ FW.World = class World
     material  = new THREE.MeshNormalMaterial()
     mesh  = new THREE.Mesh( geometry, material )
     mesh.position.y = -geometry.height/2
-    FW.scene.add(mesh)
+    # FW.scene.add(mesh)
     ground  = THREEx.Oimo.createBodyFromMesh(@world, mesh, false)
 
     #CUBE
@@ -95,7 +95,7 @@ FW.World = class World
 
 
     #Spectrum
-    # @spectrum = new FW.Spectrum()
+    @spectrum = new FW.Spectrum()
 
    
 
@@ -107,7 +107,7 @@ FW.World = class World
     FW.camera.updateProjectionMatrix()
 
   animate : =>
-    # @spectrum.update()
+    @spectrum.update()
     @iomoStats.update()
     @world.step()
     for body in @bodies
@@ -115,6 +115,6 @@ FW.World = class World
     @controls.update()
     delta = FW.clock.getDelta()
     FW.Renderer.render( FW.scene, FW.camera );
-    # THREE.AnimationHandler.update(delta)
+    THREE.AnimationHandler.update(delta)
 
 

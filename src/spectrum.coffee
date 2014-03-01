@@ -1,7 +1,7 @@
 FW.Spectrum = class Spectrum
   constructor: ->
     #set up a row of 1024 cuebs- each one representing a fequency bin
-    xRange = 40
+    xRange = 1000
     cubeWidth = xRange/1024
     @specBoxes = []
 
@@ -14,20 +14,18 @@ FW.Spectrum = class Spectrum
       specBox = new THREE.Mesh specGeo, specMat
       specBox.material.color.setRGB Math.random(), Math.random(), Math.random()
       specBox.position.set(xPos, 0, -50)
-      if i > FW.freqMap.voiceStart and i < FW.freqMap.voiceEnd
-        FW.scene.add specBox
+      FW.scene.add specBox
       @specBoxes.push specBox
 
 
   update: ->
     for i in [0...@specBoxes.length]
       #Toggle visibility on and off dynamically
-      if i > FW.freqMap.voiceStart
         # console.log FW.freqMap.voiceStart
-        @specBoxes[i].visible = true
+        # @specBoxes[i].visible = true
         @specBoxes[i].scale.y = Math.max(1, FW.freqByteData[i])
-      else
-        @specBoxes[i].visible = false
+      # else
+      #   @specBoxes[i].visible = false
 
 
 

@@ -30,7 +30,8 @@ FW.Director = class Director
     @initScenes()
     #find elapsed time between our current time and start time to play song in right place
     songPosition = (@currentScene.startTime - @startTime)/1000
-    # FW.audio.source.noteGrainOn(0, songPosition, 1000)
+    #ARGS(how long till start playing, when to start at, duration)
+    FW.audio.source.noteGrainOn(0, 0, 1000)
 
     @run()
 

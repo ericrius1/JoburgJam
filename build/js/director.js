@@ -39,6 +39,7 @@ FW.Director = Director = (function() {
     FW.world = new FW.World();
     this.initScenes();
     songPosition = (this.currentScene.startTime - this.startTime) / 1000;
+    FW.audio.source.noteGrainOn(0, 0, 1000);
     return this.run();
   };
 

@@ -3,7 +3,7 @@ var Spectrum;
 FW.Spectrum = Spectrum = (function() {
   function Spectrum() {
     var cubeWidth, i, specBox, specBoxTemplate, specGeo, specMat, xPos, xRange;
-    xRange = 40;
+    xRange = 1000;
     cubeWidth = xRange / 1024;
     this.specBoxes = [];
     specGeo = new THREE.CubeGeometry(cubeWidth, 1, 1);
@@ -16,9 +16,7 @@ FW.Spectrum = Spectrum = (function() {
         specBox = new THREE.Mesh(specGeo, specMat);
         specBox.material.color.setRGB(Math.random(), Math.random(), Math.random());
         specBox.position.set(xPos, 0, -50);
-        if (i > FW.freqMap.voiceStart && i < FW.freqMap.voiceEnd) {
-          FW.scene.add(specBox);
-        }
+        FW.scene.add(specBox);
         _results.push(this.specBoxes.push(specBox));
       }
       return _results;
@@ -29,12 +27,7 @@ FW.Spectrum = Spectrum = (function() {
     var i, _i, _ref, _results;
     _results = [];
     for (i = _i = 0, _ref = this.specBoxes.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-      if (i > FW.freqMap.voiceStart) {
-        this.specBoxes[i].visible = true;
-        _results.push(this.specBoxes[i].scale.y = Math.max(1, FW.freqByteData[i]));
-      } else {
-        _results.push(this.specBoxes[i].visible = false);
-      }
+      _results.push(this.specBoxes[i].scale.y = Math.max(1, FW.freqByteData[i]));
     }
     return _results;
   };

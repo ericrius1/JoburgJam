@@ -12,7 +12,7 @@ FW.World = World = (function() {
     FW.audio.masterGain.value = 1;
     this.bodies = [];
     FW.camera = new THREE.PerspectiveCamera(45.0, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 1, this.camFar);
-    FW.camera.position.set(0, 40, 1000);
+    FW.camera.position.set(0, 0, 100);
     this.controls = new THREE.TrackballControls(FW.camera);
     this.controls.rotateSpeed = 1.0;
     this.controls.zoomSpeed = 1.2;
@@ -54,7 +54,6 @@ FW.World = World = (function() {
     material = new THREE.MeshNormalMaterial();
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.y = -geometry.height / 2;
-    FW.scene.add(mesh);
     ground = THREEx.Oimo.createBodyFromMesh(this.world, mesh, false);
     geometry = new THREE.SphereGeometry(5);
     material = new THREE.MeshNormalMaterial();
@@ -63,7 +62,8 @@ FW.World = World = (function() {
     FW.scene.add(mesh);
     body = THREEx.Oimo.createBodyFromMesh(this.world, mesh);
     body.updater = new THREEx.Oimo.Body2MeshUpdater(body, mesh);
-    return this.bodies.push(body);
+    this.bodies.push(body);
+    return this.spectrum = new FW.Spectrum();
   };
 
   World.prototype.onWindowResize = function(event) {
@@ -76,6 +76,7 @@ FW.World = World = (function() {
 
   World.prototype.animate = function() {
     var body, delta, _i, _len, _ref;
+    this.spectrum.update();
     this.iomoStats.update();
     this.world.step();
     _ref = this.bodies;
@@ -85,7 +86,8 @@ FW.World = World = (function() {
     }
     this.controls.update();
     delta = FW.clock.getDelta();
-    return FW.Renderer.render(FW.scene, FW.camera);
+    FW.Renderer.render(FW.scene, FW.camera);
+    return THREE.AnimationHandler.update(delta);
   };
 
   return World;
