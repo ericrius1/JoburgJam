@@ -10,8 +10,9 @@ FW.World = World = (function() {
     this.SCREEN_HEIGHT = window.innerHeight;
     this.camFar = 2000;
     FW.audio.masterGain.value = 1;
+    this.bodyUpdaters = [];
     FW.camera = new THREE.PerspectiveCamera(45.0, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 1, this.camFar);
-    FW.camera.position.z = 20;
+    FW.camera.position.set(0, 40, 1000);
     this.controls = new THREE.TrackballControls(FW.camera);
     this.controls.rotateSpeed = 1.0;
     this.controls.zoomSpeed = 1.2;
@@ -21,7 +22,9 @@ FW.World = World = (function() {
     this.controls.staticMoving = true;
     this.controls.dynamicDampingFactor = 0.3;
     FW.scene = new THREE.Scene();
+    this.world = new OIMO.World();
     this.initSceneObjects();
+    this.iomoStats = new THREEx.Oimo.Stats(this.world);
     FW.Renderer = new THREE.WebGLRenderer({
       antialias: true
     });
@@ -33,14 +36,20 @@ FW.World = World = (function() {
   }
 
   World.prototype.initSceneObjects = function() {
-    var light;
-    light = new THREE.DirectionalLight(0xaa00aa, 1);
-    light.position.set(0, 1, 0);
-    FW.scene.add(light);
-    light = new THREE.DirectionalLight(0x44aaaa, 1);
-    light.position.set(0, -1, 0);
-    FW.scene.add(light);
-    return this.haze = new FW.Haze();
+    var body, geometry, ground, material, mesh;
+    geometry = new THREE.CubeGeometry(100, 100, 400);
+    material = new THREE.MeshNormalMaterial();
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.y = -geometry.height / 2;
+    FW.scene.add(mesh);
+    ground = THREEx.Oimo.createBodyFromMesh(this.world, mesh, false);
+    geometry = new THREE.SphereGeometry(5);
+    material = new THREE.MeshNormalMaterial();
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.y = 1000;
+    FW.scene.add(mesh);
+    body = THREEx.Oimo.createBodyFromMesh(this.world, mesh);
+    return this.bodyUpdaters.push(new THREEx.Oimo.Body2MeshUpdater(body, mesh));
   };
 
   World.prototype.onWindowResize = function(event) {
@@ -52,14 +61,16 @@ FW.World = World = (function() {
   };
 
   World.prototype.animate = function() {
-    this.haze.update();
-    return this.render();
-  };
-
-  World.prototype.render = function() {
-    var delta;
-    delta = FW.clock.getDelta();
+    var delta, updater, _i, _len, _ref;
+    this.iomoStats.update();
+    this.world.step();
+    _ref = this.bodyUpdaters;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      updater = _ref[_i];
+      updater.update();
+    }
     this.controls.update();
+    delta = FW.clock.getDelta();
     return FW.Renderer.render(FW.scene, FW.camera);
   };
 

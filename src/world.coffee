@@ -6,10 +6,11 @@ FW.World = class World
     @SCREEN_HEIGHT = window.innerHeight
     @camFar = 2000
     FW.audio.masterGain.value = 1
+    @bodyUpdaters = []
 
     # CAMERA
     FW.camera = new THREE.PerspectiveCamera(45.0, @SCREEN_WIDTH / @SCREEN_HEIGHT, 1, @camFar)
-    FW.camera.position.z = 20
+    FW.camera.position.set 0, 40, 1000
     
     #CONTROLS
     # @controls = new THREE.PathControls(FW.camera)
@@ -37,8 +38,9 @@ FW.World = class World
     # SCENE 
     FW.scene = new THREE.Scene()
     # FW.scene.add @controls.animationParent
+    @world = new OIMO.World()
     @initSceneObjects()
-
+    @iomoStats = new THREEx.Oimo.Stats(@world)
 
 
 
@@ -56,22 +58,26 @@ FW.World = class World
     #start animation
 
   initSceneObjects: ->
-    light = new THREE.DirectionalLight( 0xaa00aa , 1 )
-    light.position.set( 0 , 1 , 0 );
+    #GROUND
+    geometry  = new THREE.CubeGeometry(100,100,400)
+    material  = new THREE.MeshNormalMaterial()
+    mesh  = new THREE.Mesh( geometry, material )
+    mesh.position.y = -geometry.height/2
+    FW.scene.add(mesh)
+    ground  = THREEx.Oimo.createBodyFromMesh(@world, mesh, false)
 
-    FW.scene.add light
+    #CUBE
+    geometry = new THREE.SphereGeometry(5)
+    material = new THREE.MeshNormalMaterial()
+    mesh = new THREE.Mesh geometry, material
+    mesh.position.y = 1000
+    FW.scene.add mesh
+    body  = THREEx.Oimo.createBodyFromMesh(@world, mesh)
+    @bodyUpdaters.push new THREEx.Oimo.Body2MeshUpdater(body, mesh)
 
-    light = new THREE.DirectionalLight( 0x44aaaa , 1 )
-    light.position.set( 0 , -1 , 0 )
-
-    FW.scene.add( light )
+    
 
 
-
-
-
-    # HAZE
-    @haze = new FW.Haze()
 
     #Spectrum
     # @spectrum = new FW.Spectrum()
@@ -86,12 +92,14 @@ FW.World = class World
     FW.camera.updateProjectionMatrix()
 
   animate : =>
-    @haze.update()
     # @spectrum.update()
-    @render()
-  render : ->
-    delta = FW.clock.getDelta()
-    # THREE.AnimationHandler.update(delta)
+    @iomoStats.update()
+    @world.step()
+    for updater in @bodyUpdaters
+      updater.update()
     @controls.update()
+    delta = FW.clock.getDelta()
     FW.Renderer.render( FW.scene, FW.camera );
+    # THREE.AnimationHandler.update(delta)
+
 
