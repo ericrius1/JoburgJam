@@ -6,7 +6,7 @@ FW.World = class World
     @SCREEN_HEIGHT = window.innerHeight
     @camFar = 2000
     FW.audio.masterGain.value = 1
-    @bodyUpdaters = []
+    @bodies= []
 
     # CAMERA
     FW.camera = new THREE.PerspectiveCamera(45.0, @SCREEN_WIDTH / @SCREEN_HEIGHT, 1, @camFar)
@@ -40,7 +40,12 @@ FW.World = class World
     # FW.scene.add @controls.animationParent
     @world = new OIMO.World()
     @initSceneObjects()
+    @bounce()
+    
+ 
+    
     @iomoStats = new THREEx.Oimo.Stats(@world)
+    document.body.appendChild(@iomoStats.domElement)
 
 
 
@@ -56,6 +61,14 @@ FW.World = class World
 
     # @controls.animation.play(true, 0)
     #start animation
+
+  bounce: ->
+    setTimeout ()=>
+      force = new OIMO.Vec3 0, .005, 0
+      body = @bodies[0].body
+      body.applyImpulse(body.position, force)
+      @bounce()
+    ,2000
 
   initSceneObjects: ->
     #GROUND
@@ -73,9 +86,11 @@ FW.World = class World
     mesh.position.y = 1000
     FW.scene.add mesh
     body  = THREEx.Oimo.createBodyFromMesh(@world, mesh)
-    @bodyUpdaters.push new THREEx.Oimo.Body2MeshUpdater(body, mesh)
+    body.updater = new THREEx.Oimo.Body2MeshUpdater(body, mesh)
+    @bodies.push body
 
-    
+
+
 
 
 
@@ -95,8 +110,8 @@ FW.World = class World
     # @spectrum.update()
     @iomoStats.update()
     @world.step()
-    for updater in @bodyUpdaters
-      updater.update()
+    for body in @bodies
+      body.updater.update()
     @controls.update()
     delta = FW.clock.getDelta()
     FW.Renderer.render( FW.scene, FW.camera );

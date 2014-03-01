@@ -10,7 +10,7 @@ FW.World = World = (function() {
     this.SCREEN_HEIGHT = window.innerHeight;
     this.camFar = 2000;
     FW.audio.masterGain.value = 1;
-    this.bodyUpdaters = [];
+    this.bodies = [];
     FW.camera = new THREE.PerspectiveCamera(45.0, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 1, this.camFar);
     FW.camera.position.set(0, 40, 1000);
     this.controls = new THREE.TrackballControls(FW.camera);
@@ -24,7 +24,9 @@ FW.World = World = (function() {
     FW.scene = new THREE.Scene();
     this.world = new OIMO.World();
     this.initSceneObjects();
+    this.bounce();
     this.iomoStats = new THREEx.Oimo.Stats(this.world);
+    document.body.appendChild(this.iomoStats.domElement);
     FW.Renderer = new THREE.WebGLRenderer({
       antialias: true
     });
@@ -34,6 +36,17 @@ FW.World = World = (function() {
       return _this.onWindowResize();
     }), false);
   }
+
+  World.prototype.bounce = function() {
+    var _this = this;
+    return setTimeout(function() {
+      var body, force;
+      force = new OIMO.Vec3(0, .005, 0);
+      body = _this.bodies[0].body;
+      body.applyImpulse(body.position, force);
+      return _this.bounce();
+    }, 2000);
+  };
 
   World.prototype.initSceneObjects = function() {
     var body, geometry, ground, material, mesh;
@@ -49,7 +62,8 @@ FW.World = World = (function() {
     mesh.position.y = 1000;
     FW.scene.add(mesh);
     body = THREEx.Oimo.createBodyFromMesh(this.world, mesh);
-    return this.bodyUpdaters.push(new THREEx.Oimo.Body2MeshUpdater(body, mesh));
+    body.updater = new THREEx.Oimo.Body2MeshUpdater(body, mesh);
+    return this.bodies.push(body);
   };
 
   World.prototype.onWindowResize = function(event) {
@@ -61,13 +75,13 @@ FW.World = World = (function() {
   };
 
   World.prototype.animate = function() {
-    var delta, updater, _i, _len, _ref;
+    var body, delta, _i, _len, _ref;
     this.iomoStats.update();
     this.world.step();
-    _ref = this.bodyUpdaters;
+    _ref = this.bodies;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      updater = _ref[_i];
-      updater.update();
+      body = _ref[_i];
+      body.updater.update();
     }
     this.controls.update();
     delta = FW.clock.getDelta();
