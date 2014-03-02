@@ -53,6 +53,19 @@ FW.World = class World
 
   initSceneObjects: ->
   
+    #GROUND
+    ground_material = Physijs.createMaterial \
+      new THREE.MeshNormalMaterial()
+      ,.8 # high friction
+      ,.3 # low restitution
+    
+    ground = new Physijs.BoxMesh \
+      new THREE.CubeGeometry(100, 1, 100)
+      ,ground_material
+      ,0 # mass
+    ground.receiveShadow = true
+    FW.scene.add( ground )
+
     #Spectrum
     @spectrum = new FW.Spectrum()
 

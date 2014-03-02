@@ -42,6 +42,11 @@ FW.World = World = (function() {
   }
 
   World.prototype.initSceneObjects = function() {
+    var ground, ground_material;
+    ground_material = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .8, .3);
+    ground = new Physijs.BoxMesh(new THREE.CubeGeometry(100, 1, 100), ground_material, 0);
+    ground.receiveShadow = true;
+    FW.scene.add(ground);
     this.spectrum = new FW.Spectrum();
     return this.popcorn = new FW.Popcorn();
   };
