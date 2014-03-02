@@ -3,7 +3,7 @@ var World,
 
 FW.World = World = (function() {
   function World() {
-    this.animate = __bind(this.animate, this);
+    this.render = __bind(this.render, this);
     var _this = this;
     FW.clock = new THREE.Clock();
     this.SCREEN_WIDTH = window.innerWidth;
@@ -25,6 +25,10 @@ FW.World = World = (function() {
     Physijs.scripts.worker = '/lib/physijs/physijs_worker.js';
     Physijs.scripts.ammo = '/lib/physijs/ammo.js';
     FW.scene = new Physijs.Scene();
+    FW.scene.addEventListener('update', function() {
+      FW.scene.simulate(void 0, 1);
+      return _this.physics_stats.update();
+    });
     this.initSceneObjects();
     FW.Renderer = new THREE.WebGLRenderer({
       antialias: true
@@ -34,6 +38,7 @@ FW.World = World = (function() {
     window.addEventListener("resize", (function() {
       return _this.onWindowResize();
     }), false);
+    FW.scene.simulate();
   }
 
   World.prototype.initSceneObjects = function() {
@@ -49,28 +54,27 @@ FW.World = World = (function() {
     return FW.camera.updateProjectionMatrix();
   };
 
-  World.prototype.animate = function() {
+  World.prototype.render = function() {
     var delta;
     this.spectrum.update();
     this.popcorn.update();
     this.controls.update();
+    this.render_stats.update();
     delta = FW.clock.getDelta();
-    FW.Renderer.render(FW.scene, FW.camera);
-    return THREE.AnimationHandler.update(delta);
+    return FW.Renderer.render(FW.scene, FW.camera);
   };
 
   World.prototype.initStats = function() {
-    var physics_stats, render_stats;
-    render_stats = new Stats();
-    render_stats.domElement.style.position = 'absolute';
-    render_stats.domElement.style.top = '0px';
-    render_stats.domElement.style.zIndex = 100;
-    document.body.appendChild(render_stats.domElement);
-    physics_stats = new Stats();
-    physics_stats.domElement.style.position = 'absolute';
-    physics_stats.domElement.style.top = '50px';
-    physics_stats.domElement.style.zIndex = 100;
-    return document.body.appendChild(physics_stats.domElement);
+    this.render_stats = new Stats();
+    this.render_stats.domElement.style.position = 'absolute';
+    this.render_stats.domElement.style.top = '0px';
+    this.render_stats.domElement.style.zIndex = 100;
+    document.body.appendChild(this.render_stats.domElement);
+    this.physics_stats = new Stats();
+    this.physics_stats.domElement.style.position = 'absolute';
+    this.physics_stats.domElement.style.top = '50px';
+    this.physics_stats.domElement.style.zIndex = 100;
+    return document.body.appendChild(this.physics_stats.domElement);
   };
 
   return World;

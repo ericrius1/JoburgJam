@@ -48,7 +48,7 @@ FW.Director = Director = (function() {
   Director.prototype.run = function() {
     requestAnimationFrame(this.run);
     FW.audio.update();
-    FW.world.animate();
+    FW.world.render();
     return FW.freqMap.voiceStart += .01;
   };
 

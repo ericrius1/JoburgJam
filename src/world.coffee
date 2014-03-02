@@ -12,16 +12,6 @@ FW.World = class World
     FW.camera = new THREE.PerspectiveCamera(45.0, @SCREEN_WIDTH / @SCREEN_HEIGHT, 1, @camFar)
     FW.camera.position.set 0, 50, 100
 
-    #CONTROLS
-    # @controls = new THREE.PathControls(FW.camera)
-    # @controls.waypoints = [ [ 0, 0, 0], [0, 0, -30] ];
-    # @controls.duration = 280
-    # @controls.useConstantSpeed = true
-    # @controls.lookSpeed = .0001
-    # @controls.lookVertical = true
-    # @controls.lookHorizontal = true
-    # @controls.init()
-
     @controls = new THREE.TrackballControls(FW.camera)
 
     @controls.rotateSpeed = 1.0;
@@ -36,16 +26,15 @@ FW.World = class World
 
     @initStats()
 
-
     #PHYSICS
     Physijs.scripts.worker = '/lib/physijs/physijs_worker.js';
     Physijs.scripts.ammo = '/lib/physijs/ammo.js';
     # SCENE 
     FW.scene = new Physijs.Scene()
-    # FW.scene.add @controls.animationParent
-
-    
-
+    FW.scene.addEventListener 'update', =>
+      # args: timestep, maxSubsteps
+      FW.scene.simulate undefined, 1
+      @physics_stats.update()
     @initSceneObjects()
     
  
@@ -60,10 +49,7 @@ FW.World = class World
       @onWindowResize()
     ), false
 
-    # @controls.animation.play(true, 0)
-    #start animation
-
-
+    FW.scene.simulate()
 
   initSceneObjects: ->
   
@@ -73,8 +59,6 @@ FW.World = class World
     #POPCORN
     @popcorn = new FW.Popcorn()
 
-   
-
   onWindowResize : (event) ->
     @SCREEN_WIDTH = window.innerWidth
     @SCREEN_HEIGHT = window.innerHeight
@@ -82,25 +66,25 @@ FW.World = class World
     FW.camera.aspect = @SCREEN_WIDTH / @SCREEN_HEIGHT
     FW.camera.updateProjectionMatrix()
 
-  animate : =>
+  render : =>
     @spectrum.update()
     @popcorn.update()
     @controls.update()
+    @render_stats.update()
     delta = FW.clock.getDelta()
     FW.Renderer.render( FW.scene, FW.camera );
-    THREE.AnimationHandler.update(delta)
 
   initStats: ->
-    render_stats = new Stats();
-    render_stats.domElement.style.position = 'absolute';
-    render_stats.domElement.style.top = '0px';
-    render_stats.domElement.style.zIndex = 100;
-    document.body.appendChild( render_stats.domElement );
+    @render_stats = new Stats();
+    @render_stats.domElement.style.position = 'absolute';
+    @render_stats.domElement.style.top = '0px';
+    @render_stats.domElement.style.zIndex = 100;
+    document.body.appendChild( @render_stats.domElement );
     
-    physics_stats = new Stats();
-    physics_stats.domElement.style.position = 'absolute';
-    physics_stats.domElement.style.top = '50px';
-    physics_stats.domElement.style.zIndex = 100;
-    document.body.appendChild( physics_stats.domElement );
+    @physics_stats = new Stats();
+    @physics_stats.domElement.style.position = 'absolute';
+    @physics_stats.domElement.style.top = '50px';
+    @physics_stats.domElement.style.zIndex = 100;
+    document.body.appendChild( @physics_stats.domElement );
 
 

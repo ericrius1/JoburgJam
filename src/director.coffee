@@ -40,7 +40,8 @@ FW.Director = class Director
   run: =>
     requestAnimationFrame @run
     FW.audio.update()
-    FW.world.animate()
+    FW.world.render()
+
     # @currentScene.update()
 
     FW.freqMap.voiceStart+=.01
