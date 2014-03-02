@@ -22,6 +22,8 @@ FW.World = World = (function() {
     this.controls.staticMoving = true;
     this.controls.dynamicDampingFactor = 0.3;
     FW.scene = new THREE.Scene();
+    Physijs.scripts.worker = '../lib/physisjs/physijs_worker.js';
+    Physijs.scripts.ammo = '../lib/physijs/ammo.js';
     this.initSceneObjects();
     FW.Renderer = new THREE.WebGLRenderer({
       antialias: true

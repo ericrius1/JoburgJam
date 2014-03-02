@@ -40,6 +40,9 @@ FW.World = class World
     # FW.scene.add @controls.animationParent
 
     
+    #PHYSICS
+    Physijs.scripts.worker = '../lib/physisjs/physijs_worker.js';
+    Physijs.scripts.ammo = '../lib/physijs/ammo.js';
 
     @initSceneObjects()
     
