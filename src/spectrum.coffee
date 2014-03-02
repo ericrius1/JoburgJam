@@ -16,6 +16,9 @@ FW.Spectrum = class Spectrum
       specBox.position.set(xPos, 0, -50)
       FW.scene.add specBox
       @specBoxes.push specBox
+      body  = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, specBox)
+      body.updater = new THREEx.Oimo.Body2MeshUpdater(body, specBox)
+      FW.bodies.push body
 
 
   update: ->

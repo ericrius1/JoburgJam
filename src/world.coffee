@@ -6,7 +6,7 @@ FW.World = class World
     @SCREEN_HEIGHT = window.innerHeight
     @camFar = 2000
     FW.audio.masterGain.value = 1
-    @bodies= []
+    FW.bodies= []
 
     # CAMERA
     FW.camera = new THREE.PerspectiveCamera(45.0, @SCREEN_WIDTH / @SCREEN_HEIGHT, 1, @camFar)
@@ -38,13 +38,13 @@ FW.World = class World
     # SCENE 
     FW.scene = new THREE.Scene()
     # FW.scene.add @controls.animationParent
-    @world = new OIMO.World()
+    FW.physicsWorld = new OIMO.World()
     @initSceneObjects()
     @bounce()
     
  
     
-    @iomoStats = new THREEx.Oimo.Stats(@world)
+    @iomoStats = new THREEx.Oimo.Stats(FW.physicsWorld)
     document.body.appendChild(@iomoStats.domElement)
 
 
@@ -65,7 +65,7 @@ FW.World = class World
   bounce: ->
     setTimeout ()=>
       force = new OIMO.Vec3 0, .005, 0
-      body = @bodies[0].body
+      body = FW.bodies[0].body
       body.applyImpulse(body.position, force)
       @bounce()
     ,2000
@@ -77,7 +77,7 @@ FW.World = class World
     mesh  = new THREE.Mesh( geometry, material )
     mesh.position.y = -geometry.height/2
     # FW.scene.add(mesh)
-    ground  = THREEx.Oimo.createBodyFromMesh(@world, mesh, false)
+    ground  = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, mesh, false)
 
     #CUBE
     geometry = new THREE.SphereGeometry(5)
@@ -85,9 +85,9 @@ FW.World = class World
     mesh = new THREE.Mesh geometry, material
     mesh.position.y = 1000
     FW.scene.add mesh
-    body  = THREEx.Oimo.createBodyFromMesh(@world, mesh)
+    body  = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, mesh)
     body.updater = new THREEx.Oimo.Body2MeshUpdater(body, mesh)
-    @bodies.push body
+    FW.bodies.push body
 
 
 
@@ -109,8 +109,8 @@ FW.World = class World
   animate : =>
     @spectrum.update()
     @iomoStats.update()
-    @world.step()
-    for body in @bodies
+    FW.physicsWorld.step()
+    for body in FW.bodies
       body.updater.update()
     @controls.update()
     delta = FW.clock.getDelta()

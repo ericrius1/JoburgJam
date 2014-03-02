@@ -2,7 +2,7 @@ var Spectrum;
 
 FW.Spectrum = Spectrum = (function() {
   function Spectrum() {
-    var cubeWidth, i, specBox, specBoxTemplate, specGeo, specMat, xPos, xRange;
+    var body, cubeWidth, i, specBox, specBoxTemplate, specGeo, specMat, xPos, xRange;
     xRange = 1000;
     cubeWidth = xRange / 1024;
     this.specBoxes = [];
@@ -17,7 +17,10 @@ FW.Spectrum = Spectrum = (function() {
         specBox.material.color.setRGB(Math.random(), Math.random(), Math.random());
         specBox.position.set(xPos, 0, -50);
         FW.scene.add(specBox);
-        _results.push(this.specBoxes.push(specBox));
+        this.specBoxes.push(specBox);
+        body = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, specBox);
+        body.updater = new THREEx.Oimo.Body2MeshUpdater(body, specBox);
+        _results.push(FW.bodies.push(body));
       }
       return _results;
     }).call(this);
