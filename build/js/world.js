@@ -3,6 +3,7 @@ var World,
 
 FW.World = World = (function() {
   function World() {
+    this.spawnBox = __bind(this.spawnBox, this);
     this.render = __bind(this.render, this);
     var _this = this;
     FW.clock = new THREE.Clock();
@@ -48,7 +49,8 @@ FW.World = World = (function() {
     ground.receiveShadow = true;
     FW.scene.add(ground);
     this.spectrum = new FW.Spectrum();
-    return this.popcorn = new FW.Popcorn();
+    this.popcorn = new FW.Popcorn();
+    return this.spawnBox();
   };
 
   World.prototype.onWindowResize = function(event) {
@@ -80,6 +82,21 @@ FW.World = World = (function() {
     this.physics_stats.domElement.style.top = '50px';
     this.physics_stats.domElement.style.zIndex = 100;
     return document.body.appendChild(this.physics_stats.domElement);
+  };
+
+  World.prototype.spawnBox = function() {
+    var box, box_geometry, handleCollision, material,
+      _this = this;
+    box_geometry = new THREE.CubeGeometry(4, 4, 4);
+    handleCollision = function(collided_with, linearVelocity, angularVelocity) {};
+    material = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .6, .3);
+    box = new Physijs.BoxMesh(box_geometry, material);
+    box.position.set(Math.random() * 15 - 7.5, 25, Math.random() * 15 - 7.5);
+    box.addEventListener('collision', handleCollision);
+    FW.scene.add(box);
+    return setTimeout(function() {
+      return _this.spawnBox();
+    }, 1000);
   };
 
   return World;

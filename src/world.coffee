@@ -72,6 +72,8 @@ FW.World = class World
     #POPCORN
     @popcorn = new FW.Popcorn()
 
+    @spawnBox()
+
   onWindowResize : (event) ->
     @SCREEN_WIDTH = window.innerWidth
     @SCREEN_HEIGHT = window.innerHeight
@@ -99,5 +101,20 @@ FW.World = class World
     @physics_stats.domElement.style.top = '50px';
     @physics_stats.domElement.style.zIndex = 100;
     document.body.appendChild( @physics_stats.domElement );
+
+  spawnBox: =>
+    box_geometry = new THREE.CubeGeometry(4, 4, 4)
+    handleCollision = (collided_with, linearVelocity, angularVelocity)->
+    material = Physijs.createMaterial \
+      new THREE.MeshNormalMaterial()
+      , .6 # medium restitution
+      , .3 # low restitution
+    box = new Physijs.BoxMesh box_geometry, material
+    box.position.set Math.random() * 15 -7.5, 25, Math.random() * 15 - 7.5
+    box.addEventListener 'collision', handleCollision
+    FW.scene.add box
+    setTimeout =>
+      @spawnBox()
+    , 1000
 
 
