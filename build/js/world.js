@@ -21,6 +21,7 @@ FW.World = World = (function() {
     this.controls.noPan = false;
     this.controls.staticMoving = true;
     this.controls.dynamicDampingFactor = 0.3;
+    this.initStats();
     Physijs.scripts.worker = '/lib/physijs/physijs_worker.js';
     Physijs.scripts.ammo = '/lib/physijs/ammo.js';
     FW.scene = new Physijs.Scene();
@@ -56,6 +57,20 @@ FW.World = World = (function() {
     delta = FW.clock.getDelta();
     FW.Renderer.render(FW.scene, FW.camera);
     return THREE.AnimationHandler.update(delta);
+  };
+
+  World.prototype.initStats = function() {
+    var physics_stats, render_stats;
+    render_stats = new Stats();
+    render_stats.domElement.style.position = 'absolute';
+    render_stats.domElement.style.top = '0px';
+    render_stats.domElement.style.zIndex = 100;
+    document.body.appendChild(render_stats.domElement);
+    physics_stats = new Stats();
+    physics_stats.domElement.style.position = 'absolute';
+    physics_stats.domElement.style.top = '50px';
+    physics_stats.domElement.style.zIndex = 100;
+    return document.body.appendChild(physics_stats.domElement);
   };
 
   return World;

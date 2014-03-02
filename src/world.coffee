@@ -34,6 +34,8 @@ FW.World = class World
     @controls.staticMoving = true;
     @controls.dynamicDampingFactor = 0.3;
 
+    @initStats()
+
 
     #PHYSICS
     Physijs.scripts.worker = '/lib/physijs/physijs_worker.js';
@@ -87,5 +89,18 @@ FW.World = class World
     delta = FW.clock.getDelta()
     FW.Renderer.render( FW.scene, FW.camera );
     THREE.AnimationHandler.update(delta)
+
+  initStats: ->
+    render_stats = new Stats();
+    render_stats.domElement.style.position = 'absolute';
+    render_stats.domElement.style.top = '0px';
+    render_stats.domElement.style.zIndex = 100;
+    document.body.appendChild( render_stats.domElement );
+    
+    physics_stats = new Stats();
+    physics_stats.domElement.style.position = 'absolute';
+    physics_stats.domElement.style.top = '50px';
+    physics_stats.domElement.style.zIndex = 100;
+    document.body.appendChild( physics_stats.domElement );
 
 
