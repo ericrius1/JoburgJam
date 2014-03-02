@@ -8,11 +8,11 @@ FW.World = World = (function() {
     FW.clock = new THREE.Clock();
     this.SCREEN_WIDTH = window.innerWidth;
     this.SCREEN_HEIGHT = window.innerHeight;
-    this.camFar = 2000;
+    this.camFar = 200000;
     FW.audio.masterGain.value = 1;
     FW.bodies = [];
     FW.camera = new THREE.PerspectiveCamera(45.0, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 1, this.camFar);
-    FW.camera.position.set(0, 0, 100);
+    FW.camera.position.set(0, 50, 100);
     this.controls = new THREE.TrackballControls(FW.camera);
     this.controls.rotateSpeed = 1.0;
     this.controls.zoomSpeed = 1.2;
@@ -24,7 +24,6 @@ FW.World = World = (function() {
     FW.scene = new THREE.Scene();
     FW.physicsWorld = new OIMO.World();
     this.initSceneObjects();
-    this.bounce();
     this.iomoStats = new THREEx.Oimo.Stats(FW.physicsWorld);
     document.body.appendChild(this.iomoStats.domElement);
     FW.Renderer = new THREE.WebGLRenderer({
@@ -37,28 +36,20 @@ FW.World = World = (function() {
     }), false);
   }
 
-  World.prototype.bounce = function() {
-    var _this = this;
-    return setTimeout(function() {
-      var body, force;
-      force = new OIMO.Vec3(0, .005, 0);
-      body = FW.bodies[0].body;
-      body.applyImpulse(body.position, force);
-      return _this.bounce();
-    }, 2000);
-  };
-
   World.prototype.initSceneObjects = function() {
     var body, geometry, ground, material, mesh;
-    geometry = new THREE.CubeGeometry(100, 100, 400);
+    geometry = new THREE.CubeGeometry(2000, 50, 2000);
     material = new THREE.MeshNormalMaterial();
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.y = -geometry.height / 2;
+    FW.scene.add(mesh);
     ground = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, mesh, false);
-    geometry = new THREE.SphereGeometry(5);
-    material = new THREE.MeshNormalMaterial();
+    geometry = new THREE.SphereGeometry(1);
+    material = new THREE.MeshBasicMaterial({
+      color: 0xff00ff
+    });
     mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y = 1000;
+    mesh.position.y = 10;
     FW.scene.add(mesh);
     body = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, mesh);
     body.updater = new THREEx.Oimo.Body2MeshUpdater(body, mesh);

@@ -4,13 +4,13 @@ FW.World = class World
     FW.clock = new THREE.Clock()
     @SCREEN_WIDTH = window.innerWidth
     @SCREEN_HEIGHT = window.innerHeight
-    @camFar = 2000
+    @camFar = 200000
     FW.audio.masterGain.value = 1
     FW.bodies= []
 
     # CAMERA
     FW.camera = new THREE.PerspectiveCamera(45.0, @SCREEN_WIDTH / @SCREEN_HEIGHT, 1, @camFar)
-    FW.camera.position.set 0, 0, 100
+    FW.camera.position.set 0, 50, 100
     
     #CONTROLS
     # @controls = new THREE.PathControls(FW.camera)
@@ -40,7 +40,6 @@ FW.World = class World
     # FW.scene.add @controls.animationParent
     FW.physicsWorld = new OIMO.World()
     @initSceneObjects()
-    @bounce()
     
  
     
@@ -62,28 +61,22 @@ FW.World = class World
     # @controls.animation.play(true, 0)
     #start animation
 
-  bounce: ->
-    setTimeout ()=>
-      force = new OIMO.Vec3 0, .005, 0
-      body = FW.bodies[0].body
-      body.applyImpulse(body.position, force)
-      @bounce()
-    ,2000
+
 
   initSceneObjects: ->
     #GROUND
-    geometry  = new THREE.CubeGeometry(100,100,400)
+    geometry  = new THREE.CubeGeometry(2000,50, 2000)
     material  = new THREE.MeshNormalMaterial()
     mesh  = new THREE.Mesh( geometry, material )
     mesh.position.y = -geometry.height/2
-    # FW.scene.add(mesh)
+    FW.scene.add(mesh)
     ground  = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, mesh, false)
 
     #CUBE
-    geometry = new THREE.SphereGeometry(5)
-    material = new THREE.MeshNormalMaterial()
+    geometry = new THREE.SphereGeometry(1)
+    material = new THREE.MeshBasicMaterial(color: 0xff00ff)
     mesh = new THREE.Mesh geometry, material
-    mesh.position.y = 1000
+    mesh.position.y = 10
     FW.scene.add mesh
     body  = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, mesh)
     body.updater = new THREEx.Oimo.Body2MeshUpdater(body, mesh)
