@@ -1,36 +1,31 @@
 FW.Spectrum = class Spectrum
   constructor: ->
-    #set up a row of 1024 cubes- each one representing a fequency bin
-    xRange = 1000
-    cubeWidth = 10
-    @spectrumBodies = []
+    #set up a row of 1024 cuebs- each one representing a fequency bin
+    xRange = 40
+    cubeWidth = xRange/1024
+    @specBoxes = []
 
-    specGeometry = new THREE.CubeGeometry 10, 10, 10
+    specGeo = new THREE.CubeGeometry cubeWidth, 1, 1
 
     specBoxTemplate = 
-    for x in [-1..1]
-      for z in [-1..1] 
-        xPos = map x, -1, 1, -xRange/2, xRange/2
-        zPos = map z, -1, 1, -xRange/2, xRange/2
-        specMat = new THREE.MeshBasicMaterial()
-        specBox = new THREE.Mesh specGeometry, specMat
-        specBox.material.color.setRGB Math.random(), Math.random(), Math.random()
-        specBox.position.set xPos, 0, zPos
-        FW.scene.add specBox
-        spectrumBody = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, specBox)
-        spectrumBody.updater = new THREEx.Oimo.Body2MeshUpdater(spectrumBody, specBox)
-        @spectrumBodies.push spectrumBody
+    for i in [0...1024]
+      xPos = map i, 0, 1024, -xRange/2, xRange/2
+      specMat = new THREE.MeshBasicMaterial()
+      specBox = new THREE.Mesh specGeo, specMat
+      specBox.material.color.setRGB Math.random(), Math.random(), Math.random()
+      specBox.position.set(xPos, 0, -50)
+      FW.scene.add specBox
+      @specBoxes.push specBox
 
 
   update: ->
-    for i in [0...@spectrumBodies.length]
-        posY = map(FW.freqByteData[100], 0, 300, 0, 10)
-        body = @spectrumBodies[i].body
-        body.setPosition(body.position.x, posY, body.position.z)
-        @spectrumBodies[i].updater.update()
-
-        
-
+    for i in [0...@specBoxes.length]
+      #Toggle visibility on and off dynamically
+      # console.log FW.freqMap.voiceStart
+      # @specBoxes[i].visible = true
+      @specBoxes[i].scale.y = Math.max(1, FW.freqByteData[i])
+    # else
+    #   @specBoxes[i].visible = false
 
 
 

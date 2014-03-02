@@ -12,10 +12,6 @@ FW.World = class World
     FW.camera = new THREE.PerspectiveCamera(45.0, @SCREEN_WIDTH / @SCREEN_HEIGHT, 1, @camFar)
     FW.camera.position.set 0, 50, 100
 
-    #PHYSICS
-    OIMO.INV_SCALE = 1
-    OIMO.WORLD_SCALE = 1
-    
     #CONTROLS
     # @controls = new THREE.PathControls(FW.camera)
     # @controls.waypoints = [ [ 0, 0, 0], [0, 0, -30] ];
@@ -42,16 +38,13 @@ FW.World = class World
     # SCENE 
     FW.scene = new THREE.Scene()
     # FW.scene.add @controls.animationParent
-    FW.physicsWorld = new OIMO.World()
+
+    
+
     @initSceneObjects()
     
  
     
-    @iomoStats = new THREEx.Oimo.Stats(FW.physicsWorld)
-    document.body.appendChild(@iomoStats.domElement)
-
-
-
     # RENDERER
     FW.Renderer = new THREE.WebGLRenderer({antialias: true})
     FW.Renderer.setSize @SCREEN_WIDTH, @SCREEN_HEIGHT
@@ -69,22 +62,19 @@ FW.World = class World
 
   initSceneObjects: ->
     #GROUND
-    geometry  = new THREE.CubeGeometry(2000,50, 2000)
+    geometry  = new THREE.CubeGeometry(2000, 10, 2000)
     material  = new THREE.MeshNormalMaterial()
     mesh  = new THREE.Mesh( geometry, material )
     mesh.position.y = -geometry.height/2
     FW.scene.add(mesh)
-    ground  = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, mesh, false)
 
     #CUBE
     geometry = new THREE.SphereGeometry(1)
     material = new THREE.MeshBasicMaterial(color: 0xff00ff)
     mesh = new THREE.Mesh geometry, material
-    mesh.position.y = 20
+    mesh.position.y = 100
     FW.scene.add mesh
-    body  = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, mesh)
-    body.updater = new THREEx.Oimo.Body2MeshUpdater(body, mesh)
-    FW.bodies.push body
+  
 
 
 
@@ -93,6 +83,9 @@ FW.World = class World
 
     #Spectrum
     @spectrum = new FW.Spectrum()
+
+    #POPCORN
+    @popcorn = new FW.Popcorn()
 
    
 
@@ -105,10 +98,7 @@ FW.World = class World
 
   animate : =>
     @spectrum.update()
-    @iomoStats.update()
-    FW.physicsWorld.step()
-    for body in FW.bodies
-      body.updater.update()
+    @popcorn.update()
     @controls.update()
     delta = FW.clock.getDelta()
     FW.Renderer.render( FW.scene, FW.camera );

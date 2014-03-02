@@ -13,8 +13,6 @@ FW.World = World = (function() {
     FW.bodies = [];
     FW.camera = new THREE.PerspectiveCamera(45.0, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 1, this.camFar);
     FW.camera.position.set(0, 50, 100);
-    OIMO.INV_SCALE = 1;
-    OIMO.WORLD_SCALE = 1;
     this.controls = new THREE.TrackballControls(FW.camera);
     this.controls.rotateSpeed = 1.0;
     this.controls.zoomSpeed = 1.2;
@@ -24,10 +22,7 @@ FW.World = World = (function() {
     this.controls.staticMoving = true;
     this.controls.dynamicDampingFactor = 0.3;
     FW.scene = new THREE.Scene();
-    FW.physicsWorld = new OIMO.World();
     this.initSceneObjects();
-    this.iomoStats = new THREEx.Oimo.Stats(FW.physicsWorld);
-    document.body.appendChild(this.iomoStats.domElement);
     FW.Renderer = new THREE.WebGLRenderer({
       antialias: true
     });
@@ -39,24 +34,21 @@ FW.World = World = (function() {
   }
 
   World.prototype.initSceneObjects = function() {
-    var body, geometry, ground, material, mesh;
-    geometry = new THREE.CubeGeometry(2000, 50, 2000);
+    var geometry, material, mesh;
+    geometry = new THREE.CubeGeometry(2000, 10, 2000);
     material = new THREE.MeshNormalMaterial();
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.y = -geometry.height / 2;
     FW.scene.add(mesh);
-    ground = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, mesh, false);
     geometry = new THREE.SphereGeometry(1);
     material = new THREE.MeshBasicMaterial({
       color: 0xff00ff
     });
     mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y = 20;
+    mesh.position.y = 100;
     FW.scene.add(mesh);
-    body = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, mesh);
-    body.updater = new THREEx.Oimo.Body2MeshUpdater(body, mesh);
-    FW.bodies.push(body);
-    return this.spectrum = new FW.Spectrum();
+    this.spectrum = new FW.Spectrum();
+    return this.popcorn = new FW.Popcorn();
   };
 
   World.prototype.onWindowResize = function(event) {
@@ -68,15 +60,9 @@ FW.World = World = (function() {
   };
 
   World.prototype.animate = function() {
-    var body, delta, _i, _len, _ref;
+    var delta;
     this.spectrum.update();
-    this.iomoStats.update();
-    FW.physicsWorld.step();
-    _ref = FW.bodies;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      body = _ref[_i];
-      body.updater.update();
-    }
+    this.popcorn.update();
     this.controls.update();
     delta = FW.clock.getDelta();
     FW.Renderer.render(FW.scene, FW.camera);
