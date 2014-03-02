@@ -13,6 +13,8 @@ FW.World = World = (function() {
     FW.bodies = [];
     FW.camera = new THREE.PerspectiveCamera(45.0, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 1, this.camFar);
     FW.camera.position.set(0, 50, 100);
+    OIMO.INV_SCALE = 1;
+    OIMO.WORLD_SCALE = 1;
     this.controls = new THREE.TrackballControls(FW.camera);
     this.controls.rotateSpeed = 1.0;
     this.controls.zoomSpeed = 1.2;
@@ -49,7 +51,7 @@ FW.World = World = (function() {
       color: 0xff00ff
     });
     mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y = 10;
+    mesh.position.y = 20;
     FW.scene.add(mesh);
     body = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, mesh);
     body.updater = new THREEx.Oimo.Body2MeshUpdater(body, mesh);

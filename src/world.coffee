@@ -11,6 +11,10 @@ FW.World = class World
     # CAMERA
     FW.camera = new THREE.PerspectiveCamera(45.0, @SCREEN_WIDTH / @SCREEN_HEIGHT, 1, @camFar)
     FW.camera.position.set 0, 50, 100
+
+    #PHYSICS
+    OIMO.INV_SCALE = 1
+    OIMO.WORLD_SCALE = 1
     
     #CONTROLS
     # @controls = new THREE.PathControls(FW.camera)
@@ -76,7 +80,7 @@ FW.World = class World
     geometry = new THREE.SphereGeometry(1)
     material = new THREE.MeshBasicMaterial(color: 0xff00ff)
     mesh = new THREE.Mesh geometry, material
-    mesh.position.y = 10
+    mesh.position.y = 20
     FW.scene.add mesh
     body  = THREEx.Oimo.createBodyFromMesh(FW.physicsWorld, mesh)
     body.updater = new THREEx.Oimo.Body2MeshUpdater(body, mesh)

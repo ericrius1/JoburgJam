@@ -38,9 +38,9 @@ FW.Spectrum = Spectrum = (function() {
     _results = [];
     for (i = _i = 0, _ref = this.spectrumBodies.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
       posY = map(FW.freqByteData[100], 0, 300, 0, 10);
-      body = this.spectrumBodies[i];
-      body.body.setPosition(body.x, posY, body.z);
-      _results.push(body.updater.update());
+      body = this.spectrumBodies[i].body;
+      body.setPosition(body.position.x, posY, body.position.z);
+      _results.push(this.spectrumBodies[i].updater.update());
     }
     return _results;
   };

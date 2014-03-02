@@ -24,10 +24,10 @@ FW.Spectrum = class Spectrum
 
   update: ->
     for i in [0...@spectrumBodies.length]
-        posY = map(FW.freqByteData[100], 0, 300, 0, 10 )
-        body = @spectrumBodies[i]
-        body.body.setPosition(body.x, posY, body.z)
-        body.updater.update()
+        posY = map(FW.freqByteData[100], 0, 300, 0, 10)
+        body = @spectrumBodies[i].body
+        body.setPosition(body.position.x, posY, body.position.z)
+        @spectrumBodies[i].updater.update()
 
         
 
