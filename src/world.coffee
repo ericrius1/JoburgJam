@@ -57,7 +57,7 @@ FW.World = class World
     ground_material = Physijs.createMaterial \
       new THREE.MeshNormalMaterial()
       ,.8 # high friction
-      ,.3 # low restitution
+      ,1.0 # high restitution (bounciness)
     
     ground = new Physijs.BoxMesh \
       new THREE.CubeGeometry(100, 1, 100)
@@ -72,7 +72,7 @@ FW.World = class World
     #POPCORN
     @popcorn = new FW.Popcorn()
 
-    @spawnBox()
+    @spawnBall()
 
   onWindowResize : (event) ->
     @SCREEN_WIDTH = window.innerWidth
@@ -102,19 +102,19 @@ FW.World = class World
     @physics_stats.domElement.style.zIndex = 100;
     document.body.appendChild( @physics_stats.domElement );
 
-  spawnBox: =>
-    box_geometry = new THREE.CubeGeometry(4, 4, 4)
+  spawnBall: =>
+    box_geometry = new THREE.SphereGeometry 4
     handleCollision = (collided_with, linearVelocity, angularVelocity)->
     material = Physijs.createMaterial \
       new THREE.MeshNormalMaterial()
-      , .6 # medium restitution
-      , .3 # low restitution
+      , .6 # medium friction
+      , 1.0 # bouncy as shit!!
     box = new Physijs.BoxMesh box_geometry, material
     box.position.set Math.random() * 15 -7.5, 25, Math.random() * 15 - 7.5
     box.addEventListener 'collision', handleCollision
     FW.scene.add box
     setTimeout =>
-      @spawnBox()
+      @spawnBall()
     , 1000
 
 
