@@ -21,9 +21,9 @@ FW.World = World = (function() {
     this.controls.noPan = false;
     this.controls.staticMoving = true;
     this.controls.dynamicDampingFactor = 0.3;
-    FW.scene = new THREE.Scene();
-    Physijs.scripts.worker = '../lib/physisjs/physijs_worker.js';
-    Physijs.scripts.ammo = '../lib/physijs/ammo.js';
+    Physijs.scripts.worker = '/lib/physijs/physijs_worker.js';
+    Physijs.scripts.ammo = '/lib/physijs/ammo.js';
+    FW.scene = new Physijs.Scene();
     this.initSceneObjects();
     FW.Renderer = new THREE.WebGLRenderer({
       antialias: true
@@ -36,19 +36,6 @@ FW.World = World = (function() {
   }
 
   World.prototype.initSceneObjects = function() {
-    var geometry, material, mesh;
-    geometry = new THREE.CubeGeometry(2000, 10, 2000);
-    material = new THREE.MeshNormalMaterial();
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y = -geometry.height / 2;
-    FW.scene.add(mesh);
-    geometry = new THREE.SphereGeometry(1);
-    material = new THREE.MeshBasicMaterial({
-      color: 0xff00ff
-    });
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y = 100;
-    FW.scene.add(mesh);
     this.spectrum = new FW.Spectrum();
     return this.popcorn = new FW.Popcorn();
   };

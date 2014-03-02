@@ -35,14 +35,14 @@ FW.World = class World
     @controls.dynamicDampingFactor = 0.3;
 
 
+    #PHYSICS
+    Physijs.scripts.worker = '/lib/physijs/physijs_worker.js';
+    Physijs.scripts.ammo = '/lib/physijs/ammo.js';
     # SCENE 
-    FW.scene = new THREE.Scene()
+    FW.scene = new Physijs.Scene()
     # FW.scene.add @controls.animationParent
 
     
-    #PHYSICS
-    Physijs.scripts.worker = '../lib/physisjs/physijs_worker.js';
-    Physijs.scripts.ammo = '../lib/physijs/ammo.js';
 
     @initSceneObjects()
     
@@ -64,26 +64,7 @@ FW.World = class World
 
 
   initSceneObjects: ->
-    #GROUND
-    geometry  = new THREE.CubeGeometry(2000, 10, 2000)
-    material  = new THREE.MeshNormalMaterial()
-    mesh  = new THREE.Mesh( geometry, material )
-    mesh.position.y = -geometry.height/2
-    FW.scene.add(mesh)
-
-    #CUBE
-    geometry = new THREE.SphereGeometry(1)
-    material = new THREE.MeshBasicMaterial(color: 0xff00ff)
-    mesh = new THREE.Mesh geometry, material
-    mesh.position.y = 100
-    FW.scene.add mesh
   
-
-
-
-
-
-
     #Spectrum
     @spectrum = new FW.Spectrum()
 
