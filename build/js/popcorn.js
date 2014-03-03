@@ -1,25 +1,22 @@
-var Popcorn,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var Popcorn;
 
 FW.Popcorn = Popcorn = (function() {
   function Popcorn() {
-    this.spawnBall = __bind(this.spawnBall, this);
-    var ground_material;
-    ground_material = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .4, 0.3);
-    this.ground = new Physijs.BoxMesh(new THREE.CubeGeometry(100, 5, 100), ground_material, 0);
-    this.ground.receiveShadow = true;
-    FW.scene.add(this.ground);
-    this.spawnBall();
+    this.createPopcornStand();
     this.slowUpdate();
   }
 
-  Popcorn.prototype.spawnBall = function() {
-    var ballMaterial, handleCollision, sphereGeometry;
+  Popcorn.prototype.createPopcornStand = function() {
+    var ballMaterial, ground_material, handleCollision, sphereGeometry;
+    ground_material = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .4, 0.3);
+    this.ground = new Physijs.BoxMesh(new THREE.CubeGeometry(10, 5, 10), ground_material, 0);
+    this.ground.receiveShadow = true;
+    FW.scene.add(this.ground);
     sphereGeometry = new THREE.SphereGeometry(2, 32, 32);
     handleCollision = function(collided_with, linearVelocity, angularVelocity) {
-      return console.log('collision');
+      return this.material.color = new THREE.Color(0xff00ff);
     };
-    ballMaterial = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .2, 1.0);
+    ballMaterial = Physijs.createMaterial(new THREE.MeshBasicMaterial(), .2, 1.0);
     this.ball = new Physijs.SphereMesh(sphereGeometry, ballMaterial, void 0);
     this.ball.position.set(0, 10, 0);
     this.ball.addEventListener('collision', handleCollision);
@@ -29,7 +26,7 @@ FW.Popcorn = Popcorn = (function() {
   Popcorn.prototype.slowUpdate = function() {
     var impulse,
       _this = this;
-    impulse = new THREE.Vector3(0, 1000, 0);
+    impulse = new THREE.Vector3(0, 100, 0);
     this.ball.applyImpulse(impulse, this.ball.position);
     return setTimeout(function() {
       return _this.slowUpdate();

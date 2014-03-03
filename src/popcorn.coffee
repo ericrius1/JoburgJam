@@ -1,29 +1,31 @@
 FW.Popcorn = class Popcorn
   constructor: ->
     #GROUND
+
+    @createPopcornStand()
+    @slowUpdate()
+  
+  createPopcornStand: ->
+    #popcorn stand
     ground_material = Physijs.createMaterial \
       new THREE.MeshNormalMaterial()
       ,.4 # low friction
       ,0.3 # high restitution (bounciness)
     
     @ground = new Physijs.BoxMesh \
-      new THREE.CubeGeometry(100, 5, 100)
+      new THREE.CubeGeometry(10, 5, 10)
       ,ground_material
       ,0 # mass
     @ground.receiveShadow = true
     FW.scene.add( @ground )
-    @spawnBall()
-    @slowUpdate()
 
-
-
-  spawnBall: =>
+    #popcorn
     sphereGeometry = new THREE.SphereGeometry 2, 32, 32
     handleCollision = (collided_with, linearVelocity, angularVelocity)->
-      console.log 'collision'
+      @material.color = new THREE.Color(0xff00ff)
 
     ballMaterial = Physijs.createMaterial \
-      new THREE.MeshNormalMaterial()
+      new THREE.MeshBasicMaterial()
       , .2 # low friction
       , 1.0 # bouncy as shit!!
     @ball = new Physijs.SphereMesh sphereGeometry, ballMaterial, undefined
@@ -33,7 +35,7 @@ FW.Popcorn = class Popcorn
   
 
   slowUpdate : ->
-    impulse = new THREE.Vector3 0, 1000, 0
+    impulse = new THREE.Vector3 0, 100, 0
     @ball.applyImpulse impulse, @ball.position
     setTimeout  =>
       @slowUpdate()
