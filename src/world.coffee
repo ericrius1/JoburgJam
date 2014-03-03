@@ -53,25 +53,17 @@ FW.World = class World
     FW.scene.simulate()
 
   initSceneObjects: ->
-  
-    #GROUND
-    ground_material = Physijs.createMaterial \
-      new THREE.MeshNormalMaterial()
-      ,.4 # low friction
-      ,0.3 # high restitution (bounciness)
-    
-    @ground = new Physijs.BoxMesh \
-      new THREE.CubeGeometry(100, 5, 100)
-      ,ground_material
-      ,0 # mass
-    @ground.receiveShadow = true
-    FW.scene.add( @ground )
+    #POPCORN
+    @popcorn = new FW.Popcorn()
+
+
 
     #Spectrum
     @spectrum = new FW.Spectrum()
 
 
     @spawnBall()
+    @slowUpdate()
 
   onWindowResize : (event) ->
     @SCREEN_WIDTH = window.innerWidth
@@ -97,16 +89,16 @@ FW.World = class World
   spawnBall: =>
     sphereGeometry = new THREE.SphereGeometry 2, 32, 32
     handleCollision = (collided_with, linearVelocity, angularVelocity)->
-      console.log 'sjd'
+      console.log 'collision'
 
     ballMaterial = Physijs.createMaterial \
       new THREE.MeshNormalMaterial()
       , .2 # low friction
       , 1.0 # bouncy as shit!!
-    ball = new Physijs.SphereMesh sphereGeometry, ballMaterial, undefined
-    ball.position.set 0, 10, 0
-    ball.addEventListener 'collision', handleCollision
-    FW.scene.add ball
+    @ball = new Physijs.SphereMesh sphereGeometry, ballMaterial, undefined
+    @ball.position.set 0, 10, 0
+    @ball.addEventListener 'collision', handleCollision
+    FW.scene.add @ball
   
 
 
@@ -116,4 +108,11 @@ FW.World = class World
     @render_stats.update()
     delta = FW.clock.getDelta()
     FW.Renderer.render( FW.scene, FW.camera );
+
+  slowUpdate : ->
+    impulse = new THREE.Vector3 0, 10000, 0
+    @ball.applyImpulse impulse, @ball.position
+    # setTimeout  =>
+    #   @slowUpdate()
+    # , 1000
 

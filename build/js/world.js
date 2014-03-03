@@ -44,13 +44,10 @@ FW.World = World = (function() {
   }
 
   World.prototype.initSceneObjects = function() {
-    var ground_material;
-    ground_material = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .4, 0.3);
-    this.ground = new Physijs.BoxMesh(new THREE.CubeGeometry(100, 5, 100), ground_material, 0);
-    this.ground.receiveShadow = true;
-    FW.scene.add(this.ground);
+    this.popcorn = new FW.Popcorn();
     this.spectrum = new FW.Spectrum();
-    return this.spawnBall();
+    this.spawnBall();
+    return this.slowUpdate();
   };
 
   World.prototype.onWindowResize = function(event) {
@@ -75,16 +72,16 @@ FW.World = World = (function() {
   };
 
   World.prototype.spawnBall = function() {
-    var ball, ballMaterial, handleCollision, sphereGeometry;
+    var ballMaterial, handleCollision, sphereGeometry;
     sphereGeometry = new THREE.SphereGeometry(2, 32, 32);
     handleCollision = function(collided_with, linearVelocity, angularVelocity) {
-      return console.log('sjd');
+      return console.log('collision');
     };
     ballMaterial = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .2, 1.0);
-    ball = new Physijs.SphereMesh(sphereGeometry, ballMaterial, void 0);
-    ball.position.set(0, 10, 0);
-    ball.addEventListener('collision', handleCollision);
-    return FW.scene.add(ball);
+    this.ball = new Physijs.SphereMesh(sphereGeometry, ballMaterial, void 0);
+    this.ball.position.set(0, 10, 0);
+    this.ball.addEventListener('collision', handleCollision);
+    return FW.scene.add(this.ball);
   };
 
   World.prototype.render = function() {
@@ -94,6 +91,12 @@ FW.World = World = (function() {
     this.render_stats.update();
     delta = FW.clock.getDelta();
     return FW.Renderer.render(FW.scene, FW.camera);
+  };
+
+  World.prototype.slowUpdate = function() {
+    var impulse;
+    impulse = new THREE.Vector3(0, 10000, 0);
+    return this.ball.applyImpulse(impulse, this.ball.position);
   };
 
   return World;
