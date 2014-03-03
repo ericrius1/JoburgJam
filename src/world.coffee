@@ -58,14 +58,14 @@ FW.World = class World
     ground_material = Physijs.createMaterial \
       new THREE.MeshNormalMaterial()
       ,.4 # low friction
-      ,1.5 # high restitution (bounciness)
+      ,0.3 # high restitution (bounciness)
     
-    ground = new Physijs.BoxMesh \
+    @ground = new Physijs.BoxMesh \
       new THREE.CubeGeometry(100, 5, 100)
       ,ground_material
       ,0 # mass
-    ground.receiveShadow = true
-    FW.scene.add( ground )
+    @ground.receiveShadow = true
+    FW.scene.add( @ground )
 
     #Spectrum
     @spectrum = new FW.Spectrum()
@@ -80,12 +80,6 @@ FW.World = class World
     FW.camera.aspect = @SCREEN_WIDTH / @SCREEN_HEIGHT
     FW.camera.updateProjectionMatrix()
 
-  render : =>
-    @spectrum.update()
-    @controls.update()
-    @render_stats.update()
-    delta = FW.clock.getDelta()
-    FW.Renderer.render( FW.scene, FW.camera );
 
   initStats: ->
     @render_stats = new Stats();
@@ -108,13 +102,18 @@ FW.World = class World
     ballMaterial = Physijs.createMaterial \
       new THREE.MeshNormalMaterial()
       , .2 # low friction
-      , 1.5 # bouncy as shit!!
-    box = new Physijs.SphereMesh sphereGeometry, ballMaterial, undefined
-    box.position.set rnd(-50, 50), 50, rnd(-50, 50)
-    box.addEventListener 'collision', handleCollision
-    FW.scene.add box
-    setTimeout =>
-      @spawnBall()
-    , 1000
+      , 1.0 # bouncy as shit!!
+    ball = new Physijs.SphereMesh sphereGeometry, ballMaterial, undefined
+    ball.position.set 0, 10, 0
+    ball.addEventListener 'collision', handleCollision
+    FW.scene.add ball
+  
 
+
+  render : =>
+    @spectrum.update()
+    @controls.update()
+    @render_stats.update()
+    delta = FW.clock.getDelta()
+    FW.Renderer.render( FW.scene, FW.camera );
 
