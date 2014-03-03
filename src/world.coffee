@@ -57,11 +57,11 @@ FW.World = class World
     #GROUND
     ground_material = Physijs.createMaterial \
       new THREE.MeshNormalMaterial()
-      ,.8 # high friction
-      ,2.0 # high restitution (bounciness)
+      ,.4 # low friction
+      ,1.5 # high restitution (bounciness)
     
     ground = new Physijs.BoxMesh \
-      new THREE.CubeGeometry(100, 1, 100)
+      new THREE.CubeGeometry(100, 5, 100)
       ,ground_material
       ,0 # mass
     ground.receiveShadow = true
@@ -71,10 +71,6 @@ FW.World = class World
     @spectrum = new FW.Spectrum()
 
 
-    @ballMaterial = Physijs.createMaterial \
-      new THREE.MeshNormalMaterial()
-      , .6 # medium friction
-      , 1.0 # bouncy as shit!!
     @spawnBall()
 
   onWindowResize : (event) ->
@@ -105,17 +101,20 @@ FW.World = class World
     document.body.appendChild( @physics_stats.domElement );
 
   spawnBall: =>
-    sphereGeometry = new THREE.SphereGeometry 4, 32, 32
+    sphereGeometry = new THREE.SphereGeometry 2, 32, 32
     handleCollision = (collided_with, linearVelocity, angularVelocity)->
       console.log 'sjd'
 
-    box = new Physijs.SphereMesh sphereGeometry, @ballMaterial, undefined
-    box.position.set Math.random() * 15 -7.5, 25, Math.random() * 15 - 7.5
+    ballMaterial = Physijs.createMaterial \
+      new THREE.MeshNormalMaterial()
+      , .2 # low friction
+      , 1.5 # bouncy as shit!!
+    box = new Physijs.SphereMesh sphereGeometry, ballMaterial, undefined
+    box.position.set rnd(-50, 50), 50, rnd(-50, 50)
     box.addEventListener 'collision', handleCollision
     FW.scene.add box
-    # setTimeout =>
-    #   @spawnBall()
-    # , 1000
-    FW.scene.add box
+    setTimeout =>
+      @spawnBall()
+    , 1000
 
 

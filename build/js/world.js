@@ -45,12 +45,11 @@ FW.World = World = (function() {
 
   World.prototype.initSceneObjects = function() {
     var ground, ground_material;
-    ground_material = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .8, 2.0);
-    ground = new Physijs.BoxMesh(new THREE.CubeGeometry(100, 1, 100), ground_material, 0);
+    ground_material = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .4, 1.5);
+    ground = new Physijs.BoxMesh(new THREE.CubeGeometry(100, 5, 100), ground_material, 0);
     ground.receiveShadow = true;
     FW.scene.add(ground);
     this.spectrum = new FW.Spectrum();
-    this.ballMaterial = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .6, 1.0);
     return this.spawnBall();
   };
 
@@ -85,16 +84,20 @@ FW.World = World = (function() {
   };
 
   World.prototype.spawnBall = function() {
-    var box, handleCollision, sphereGeometry;
-    sphereGeometry = new THREE.SphereGeometry(4, 32, 32);
+    var ballMaterial, box, handleCollision, sphereGeometry,
+      _this = this;
+    sphereGeometry = new THREE.SphereGeometry(2, 32, 32);
     handleCollision = function(collided_with, linearVelocity, angularVelocity) {
       return console.log('sjd');
     };
-    box = new Physijs.SphereMesh(sphereGeometry, this.ballMaterial, void 0);
-    box.position.set(Math.random() * 15 - 7.5, 25, Math.random() * 15 - 7.5);
+    ballMaterial = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .2, 1.5);
+    box = new Physijs.SphereMesh(sphereGeometry, ballMaterial, void 0);
+    box.position.set(rnd(-50, 50), 50, rnd(-50, 50));
     box.addEventListener('collision', handleCollision);
     FW.scene.add(box);
-    return FW.scene.add(box);
+    return setTimeout(function() {
+      return _this.spawnBall();
+    }, 1000);
   };
 
   return World;
