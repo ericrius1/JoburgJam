@@ -26,8 +26,9 @@ FW.World = World = (function() {
     Physijs.scripts.worker = '/lib/physijs/physijs_worker.js';
     Physijs.scripts.ammo = '/lib/physijs/ammo.js';
     FW.scene = new Physijs.Scene();
+    FW.scene.setGravity(new THREE.Vector3(0, -60, 0));
     FW.scene.addEventListener('update', function() {
-      FW.scene.simulate(void 0, 1);
+      FW.scene.simulate(void 0, 2);
       return _this.physics_stats.update();
     });
     this.initSceneObjects();
@@ -44,12 +45,12 @@ FW.World = World = (function() {
 
   World.prototype.initSceneObjects = function() {
     var ground, ground_material;
-    ground_material = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .8, 1.0);
+    ground_material = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .8, 2.0);
     ground = new Physijs.BoxMesh(new THREE.CubeGeometry(100, 1, 100), ground_material, 0);
     ground.receiveShadow = true;
     FW.scene.add(ground);
     this.spectrum = new FW.Spectrum();
-    this.popcorn = new FW.Popcorn();
+    this.ballMaterial = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .6, 1.0);
     return this.spawnBall();
   };
 
@@ -64,7 +65,6 @@ FW.World = World = (function() {
   World.prototype.render = function() {
     var delta;
     this.spectrum.update();
-    this.popcorn.update();
     this.controls.update();
     this.render_stats.update();
     delta = FW.clock.getDelta();
@@ -85,18 +85,16 @@ FW.World = World = (function() {
   };
 
   World.prototype.spawnBall = function() {
-    var box, box_geometry, handleCollision, material,
-      _this = this;
-    box_geometry = new THREE.SphereGeometry(4);
-    handleCollision = function(collided_with, linearVelocity, angularVelocity) {};
-    material = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .6, 1.0);
-    box = new Physijs.BoxMesh(box_geometry, material);
+    var box, handleCollision, sphereGeometry;
+    sphereGeometry = new THREE.SphereGeometry(4, 32, 32);
+    handleCollision = function(collided_with, linearVelocity, angularVelocity) {
+      return console.log('sjd');
+    };
+    box = new Physijs.SphereMesh(sphereGeometry, this.ballMaterial, void 0);
     box.position.set(Math.random() * 15 - 7.5, 25, Math.random() * 15 - 7.5);
     box.addEventListener('collision', handleCollision);
     FW.scene.add(box);
-    return setTimeout(function() {
-      return _this.spawnBall();
-    }, 1000);
+    return FW.scene.add(box);
   };
 
   return World;

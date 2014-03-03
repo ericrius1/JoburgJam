@@ -31,9 +31,10 @@ FW.World = class World
     Physijs.scripts.ammo = '/lib/physijs/ammo.js';
     # SCENE 
     FW.scene = new Physijs.Scene()
+    FW.scene.setGravity(new THREE.Vector3( 0, -60, 0 ));
     FW.scene.addEventListener 'update', =>
       # args: timestep, maxSubsteps
-      FW.scene.simulate undefined, 1
+      FW.scene.simulate undefined, 2
       @physics_stats.update()
     @initSceneObjects()
     
@@ -57,7 +58,7 @@ FW.World = class World
     ground_material = Physijs.createMaterial \
       new THREE.MeshNormalMaterial()
       ,.8 # high friction
-      ,1.0 # high restitution (bounciness)
+      ,2.0 # high restitution (bounciness)
     
     ground = new Physijs.BoxMesh \
       new THREE.CubeGeometry(100, 1, 100)
@@ -69,9 +70,11 @@ FW.World = class World
     #Spectrum
     @spectrum = new FW.Spectrum()
 
-    #POPCORN
-    @popcorn = new FW.Popcorn()
 
+    @ballMaterial = Physijs.createMaterial \
+      new THREE.MeshNormalMaterial()
+      , .6 # medium friction
+      , 1.0 # bouncy as shit!!
     @spawnBall()
 
   onWindowResize : (event) ->
@@ -83,7 +86,6 @@ FW.World = class World
 
   render : =>
     @spectrum.update()
-    @popcorn.update()
     @controls.update()
     @render_stats.update()
     delta = FW.clock.getDelta()
@@ -103,18 +105,17 @@ FW.World = class World
     document.body.appendChild( @physics_stats.domElement );
 
   spawnBall: =>
-    box_geometry = new THREE.SphereGeometry 4
+    sphereGeometry = new THREE.SphereGeometry 4, 32, 32
     handleCollision = (collided_with, linearVelocity, angularVelocity)->
-    material = Physijs.createMaterial \
-      new THREE.MeshNormalMaterial()
-      , .6 # medium friction
-      , 1.0 # bouncy as shit!!
-    box = new Physijs.BoxMesh box_geometry, material
+      console.log 'sjd'
+
+    box = new Physijs.SphereMesh sphereGeometry, @ballMaterial, undefined
     box.position.set Math.random() * 15 -7.5, 25, Math.random() * 15 - 7.5
     box.addEventListener 'collision', handleCollision
     FW.scene.add box
-    setTimeout =>
-      @spawnBall()
-    , 1000
+    # setTimeout =>
+    #   @spawnBall()
+    # , 1000
+    FW.scene.add box
 
 
