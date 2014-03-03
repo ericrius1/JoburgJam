@@ -56,14 +56,8 @@ FW.World = class World
     #POPCORN
     @popcorn = new FW.Popcorn()
 
-
-
     #Spectrum
     @spectrum = new FW.Spectrum()
-
-
-    @spawnBall()
-    @slowUpdate()
 
   onWindowResize : (event) ->
     @SCREEN_WIDTH = window.innerWidth
@@ -86,20 +80,7 @@ FW.World = class World
     @physics_stats.domElement.style.zIndex = 100;
     document.body.appendChild( @physics_stats.domElement );
 
-  spawnBall: =>
-    sphereGeometry = new THREE.SphereGeometry 2, 32, 32
-    handleCollision = (collided_with, linearVelocity, angularVelocity)->
-      console.log 'collision'
 
-    ballMaterial = Physijs.createMaterial \
-      new THREE.MeshNormalMaterial()
-      , .2 # low friction
-      , 1.0 # bouncy as shit!!
-    @ball = new Physijs.SphereMesh sphereGeometry, ballMaterial, undefined
-    @ball.position.set 0, 10, 0
-    @ball.addEventListener 'collision', handleCollision
-    FW.scene.add @ball
-  
 
 
   render : =>
@@ -109,10 +90,5 @@ FW.World = class World
     delta = FW.clock.getDelta()
     FW.Renderer.render( FW.scene, FW.camera );
 
-  slowUpdate : ->
-    impulse = new THREE.Vector3 0, 10000, 0
-    @ball.applyImpulse impulse, @ball.position
-    # setTimeout  =>
-    #   @slowUpdate()
-    # , 1000
+
 
