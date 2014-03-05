@@ -1,13 +1,14 @@
 
 FW.Audio = class Audio
   constructor: ->
+    FW.frequencyBinCount = 1024
 
     @musicContext = new webkitAudioContext()
     @masterGain = @musicContext.createGain()
     @masterAnalyser = @musicContext.createAnalyser();
 
     #number of different parts of spectrum
-    @masterAnalyser.frequencyBinCount = 1024
+    @masterAnalyser.frequencyBinCount = FW.frequencyBinCount
 
     @masterGain.connect @masterAnalyser
     @masterAnalyser.connect @musicContext.destination

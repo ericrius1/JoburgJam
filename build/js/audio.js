@@ -2,10 +2,11 @@ var Audio;
 
 FW.Audio = Audio = (function() {
   function Audio() {
+    FW.frequencyBinCount = 1024;
     this.musicContext = new webkitAudioContext();
     this.masterGain = this.musicContext.createGain();
     this.masterAnalyser = this.musicContext.createAnalyser();
-    this.masterAnalyser.frequencyBinCount = 1024;
+    this.masterAnalyser.frequencyBinCount = FW.frequencyBinCount;
     this.masterGain.connect(this.masterAnalyser);
     this.masterAnalyser.connect(this.musicContext.destination);
     this.loadFile('assets/JoburgJam.mp3');
