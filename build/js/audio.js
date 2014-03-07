@@ -2,8 +2,10 @@ var Audio;
 
 FW.Audio = Audio = (function() {
   function Audio() {
+    var context;
     FW.frequencyBinCount = 1024;
-    this.musicContext = new webkitAudioContext();
+    context = window.AudioContext || window.webkitAudioContext;
+    this.musicContext = new context();
     this.masterGain = this.musicContext.createGain();
     this.masterAnalyser = this.musicContext.createAnalyser();
     this.masterAnalyser.frequencyBinCount = FW.frequencyBinCount;

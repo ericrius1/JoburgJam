@@ -3,7 +3,8 @@ FW.Audio = class Audio
   constructor: ->
     FW.frequencyBinCount = 1024
 
-    @musicContext = new webkitAudioContext()
+    context =  window.AudioContext || window.webkitAudioContext;
+    @musicContext =  new context()
     @masterGain = @musicContext.createGain()
     @masterAnalyser = @musicContext.createAnalyser();
 

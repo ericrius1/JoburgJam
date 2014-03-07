@@ -43,7 +43,8 @@ FW.World = World = (function() {
   }
 
   World.prototype.initSceneObjects = function() {
-    return this.screens = new FW.Screens();
+    this.popcorn = new FW.Popcorn();
+    return this.spectrum = new FW.Spectrum();
   };
 
   World.prototype.onWindowResize = function(event) {
@@ -70,7 +71,6 @@ FW.World = World = (function() {
   World.prototype.render = function() {
     var delta;
     this.controls.update();
-    this.screens.update();
     this.render_stats.update();
     delta = FW.clock.getDelta();
     return FW.Renderer.render(FW.scene, FW.camera);
