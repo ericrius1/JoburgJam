@@ -1,5 +1,6 @@
-FW.Popcorn = class Popcorn
-  constructor: ->
+#Just hanle one screen as physics mesh
+FW.Screen = class Screen
+  constructor: (@position)->
     #create a canvas element
     canvas = document.getElementById('textureData')
     @context = canvas.getContext('2d')
@@ -26,15 +27,10 @@ FW.Popcorn = class Popcorn
       texture: {type: 't', value: @texture}
 
     w = 1/window.innerWidth
-    h = window.innerHeight
+    h = 1/window.innerHeight
     @uniforms.resolution.value.set w, h
 
 
-    @createPopcornStand()
-    @slowUpdate()
-
-  createPopcornStand: ->
-    #popcorn stand
     material2 = new THREE.ShaderMaterial
       uniforms: @uniforms
       vertexShader: document.getElementById('vertexShader').textContent
@@ -50,31 +46,15 @@ FW.Popcorn = class Popcorn
       ,0 # mass
     @ground.receiveShadow = true
     FW.scene.add( @ground )
-
-    #popcorn
-    sphereGeometry = new THREE.SphereGeometry 2, 32, 32
-    handleCollision = (collided_with, linearVelocity, angularVelocity)=>
-      x = rnd(.29, .53)
-      y = rnd(.5, .9)
-      @uniforms.mouse.value.set x, .54
-
-    ballMaterial = Physijs.createMaterial \
-      new THREE.MeshBasicMaterial()
-      , .2 # low friction
-      , 1.0 # bouncy as shit!!
-    @ball = new Physijs.SphereMesh sphereGeometry, ballMaterial, undefined
-    @ball.position.set 0, 10, 0
-    @ball.addEventListener 'collision', handleCollision
-    FW.scene.add @ball
   
-
-  slowUpdate : ->
-    impulse = new THREE.Vector3 0, 1000, 0
-    @ball.applyImpulse impulse, @ball.position
-    setTimeout  =>
-      @slowUpdate()
-    , 3000
-
+  #Sets pixel data to the image data
+  setPixel: (imageData, x, y, r, g, b, a) ->
+    index = (x+ y * imageData.width) * 4
+    imageData.data[index + 0] = r
+    imageData.data[index + 1] = g
+    imageData.data[index + 2] = b
+    imageData.data[index + 3] = a
+    
    update: ->
     time = Date.now() - @startTime
     @uniforms.time.value = time/1000
@@ -97,12 +77,5 @@ FW.Popcorn = class Popcorn
     #updates the texture
     @texture.needsUpdate = true
 
-  #Sets pixel data to the image data
-  setPixel: (imageData, x, y, r, g, b, a) ->
-    index = (x+ y * imageData.width) * 4
-    imageData.data[index + 0] = r
-    imageData.data[index + 1] = g
-    imageData.data[index + 2] = b
-    imageData.data[index + 3] = a
     
         

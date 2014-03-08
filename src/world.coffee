@@ -38,7 +38,6 @@ FW.World = class World
       @physics_stats.update()
     @initSceneObjects()
     
- 
     
     # RENDERER
     FW.Renderer = new THREE.WebGLRenderer({antialias: true})
@@ -53,8 +52,6 @@ FW.World = class World
     FW.scene.simulate()
 
   initSceneObjects: ->
-    #POPCORN
-    @popcorn = new FW.Popcorn()
 
     #Spectrum
     @spectrum = new FW.Spectrum()
@@ -89,8 +86,6 @@ FW.World = class World
   render : =>
     # @spectrum.update()
     @controls.update()
-    # @screens.update()
-    @popcorn.update()
     @render_stats.update()
     delta = FW.clock.getDelta()
     FW.Renderer.render( FW.scene, FW.camera );
