@@ -39,7 +39,8 @@ FW.Popcorn = Popcorn = (function() {
   }
 
   Popcorn.prototype.createPopcornStand = function() {
-    var ballMaterial, ground_material, handleCollision, material2, sphereGeometry;
+    var ballMaterial, ground_material, handleCollision, material2, sphereGeometry,
+      _this = this;
     material2 = new THREE.ShaderMaterial({
       uniforms: this.uniforms,
       vertexShader: document.getElementById('vertexShader').textContent,
@@ -51,7 +52,10 @@ FW.Popcorn = Popcorn = (function() {
     FW.scene.add(this.ground);
     sphereGeometry = new THREE.SphereGeometry(2, 32, 32);
     handleCollision = function(collided_with, linearVelocity, angularVelocity) {
-      return this.material.color = new THREE.Color(0xff00ff);
+      var x, y;
+      x = rnd(.29, .53);
+      y = rnd(.5, .9);
+      return _this.uniforms.mouse.value.set(x, .54);
     };
     ballMaterial = Physijs.createMaterial(new THREE.MeshBasicMaterial(), .2, 1.0);
     this.ball = new Physijs.SphereMesh(sphereGeometry, ballMaterial, void 0);

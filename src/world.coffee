@@ -60,7 +60,7 @@ FW.World = class World
     @spectrum = new FW.Spectrum()
 
     #SCREENS
-    # @screens = new FW.Screens()
+    @screens = new FW.Screens()
 
   onWindowResize : (event) ->
     @SCREEN_WIDTH = window.innerWidth
@@ -90,6 +90,7 @@ FW.World = class World
     # @spectrum.update()
     @controls.update()
     # @screens.update()
+    @popcorn.update()
     @render_stats.update()
     delta = FW.clock.getDelta()
     FW.Renderer.render( FW.scene, FW.camera );

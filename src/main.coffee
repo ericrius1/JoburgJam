@@ -12,7 +12,7 @@ SC?.initialize({
 });
 
 FW.globalTick = 0.16
-window.soundOff = true
+window.soundOff = false
 
 window.onload = ->
   FW.audio = new FW.Audio()
