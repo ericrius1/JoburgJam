@@ -30,9 +30,10 @@ FW.Screen = Screen = (function() {
       fragmentShader: document.getElementById('fragmentShader1').textContent
     });
     screenMaterial = Physijs.createMaterial(material, .4, 0.3);
-    this.screen = new Physijs.BoxMesh(new THREE.CubeGeometry(20, 1, 20), screenMaterial, 0);
+    this.screen = new Physijs.BoxMesh(FW.screenGeometry, screenMaterial, 0);
     this.screen.position = position;
     FW.scene.add(this.screen);
+    this.ball = new FW.Ball(new THREE.Vector3(position.x, position.y + 10, position.z));
   }
 
   return Screen;

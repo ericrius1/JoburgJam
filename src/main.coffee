@@ -1,4 +1,5 @@
-
+#Multiplayer - have users stomp and dance an create ripples from point they hit
+#energy soccer
 if !Detector.webgl
    Detector.addGetWebGLMessage()
 

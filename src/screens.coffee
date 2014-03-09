@@ -3,6 +3,9 @@
 FW.Screens = class Screens
   constructor: ->
     @screens = []
+    @screenSize = 20
+    @numUnitsAcross = 4
+    FW.screenGeometry = new THREE.CubeGeometry(@screenSize, 1, @screenSize)
     #create a canvas element
     canvas = document.getElementById('textureData')
     @context = canvas.getContext('2d')
@@ -35,13 +38,18 @@ FW.Screens = class Screens
     imageData.data[index + 3] = a
 
   layoutScreens: ->
-    for i in [0...10]
-      xPos = map(i, 0, 10, -100, 100)
-      position = new THREE.Vector3 xPos, 0, 0
-      @screens.push new FW.Screen(position)
+    #FLOOR
+    startingXPos = -40
+    startingZPos = -40
+    for x in [0...@numUnitsAcross]
+      for z in [0...@numUnitsAcross]
+        xPos = startingXPos + (x * @screenSize)
+        console.log 'xPos', xPos
+        zPos = startingZPos + (z * @screenSize)
+        position = new THREE.Vector3 xPos, 0, zPos
+        @screens.push new FW.Screen(position)
 
     
-
   update: ->
     #creates the image data 
     imageData = @context.createImageData @width, @height

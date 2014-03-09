@@ -30,11 +30,13 @@ FW.Screen = class Screen
       ,0.3 # high restitution (bounciness)
     
     @screen = new Physijs.BoxMesh \
-      new THREE.CubeGeometry(20, 1, 20)
+      FW.screenGeometry
       ,screenMaterial
       ,0 # mass
     @screen.position = position
     FW.scene.add( @screen )
+    #associate a ball with a screen
+    @ball = new FW.Ball new THREE.Vector3(position.x, position.y + 10, position.z)
   
 
 

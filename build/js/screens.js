@@ -4,6 +4,9 @@ FW.Screens = Screens = (function() {
   function Screens() {
     var canvas, imageData, pixelsRoot;
     this.screens = [];
+    this.screenSize = 20;
+    this.numUnitsAcross = 4;
+    FW.screenGeometry = new THREE.CubeGeometry(this.screenSize, 1, this.screenSize);
     canvas = document.getElementById('textureData');
     this.context = canvas.getContext('2d');
     this.width = canvas.width;
@@ -27,12 +30,23 @@ FW.Screens = Screens = (function() {
   };
 
   Screens.prototype.layoutScreens = function() {
-    var i, position, xPos, _i, _results;
+    var position, startingXPos, startingZPos, x, xPos, z, zPos, _i, _ref, _results;
+    startingXPos = -40;
+    startingZPos = -40;
     _results = [];
-    for (i = _i = 0; _i < 10; i = ++_i) {
-      xPos = map(i, 0, 10, -100, 100);
-      position = new THREE.Vector3(xPos, 0, 0);
-      _results.push(this.screens.push(new FW.Screen(position)));
+    for (x = _i = 0, _ref = this.numUnitsAcross; 0 <= _ref ? _i < _ref : _i > _ref; x = 0 <= _ref ? ++_i : --_i) {
+      _results.push((function() {
+        var _j, _ref1, _results1;
+        _results1 = [];
+        for (z = _j = 0, _ref1 = this.numUnitsAcross; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; z = 0 <= _ref1 ? ++_j : --_j) {
+          xPos = startingXPos + (x * this.screenSize);
+          console.log('xPos', xPos);
+          zPos = startingZPos + (z * this.screenSize);
+          position = new THREE.Vector3(xPos, 0, zPos);
+          _results1.push(this.screens.push(new FW.Screen(position)));
+        }
+        return _results1;
+      }).call(this));
     }
     return _results;
   };

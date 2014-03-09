@@ -74,8 +74,9 @@
             float aX = texture2D( texture, vec2(v.x  , 0.0) ).r;
             float aY = texture2D( texture, vec2(v.y  , 0.0) ).a;
 
-            v.x = v.x + aX/10.00 ;
-            v.y = v.y  + aY/10.00 ;
+            //higher denominator = greater effect music has on screen
+            v.x = v.x + aX/5.;
+            v.y = v.y  + aY/5. ;
 
 
           }
