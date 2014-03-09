@@ -85,6 +85,7 @@ FW.World = class World
 
   render : =>
     # @spectrum.update()
+    @screens.update()
     @controls.update()
     @render_stats.update()
     delta = FW.clock.getDelta()

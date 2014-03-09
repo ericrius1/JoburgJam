@@ -70,6 +70,7 @@ FW.World = World = (function() {
 
   World.prototype.render = function() {
     var delta;
+    this.screens.update();
     this.controls.update();
     this.render_stats.update();
     delta = FW.clock.getDelta();

@@ -2,9 +2,62 @@
 #Can every screen use the same basic material??
 FW.Screens = class Screens
   constructor: ->
-    @screen = new FW.Screen()
+    #create a canvas element
+    canvas = document.getElementById('textureData')
+    @context = canvas.getContext('2d')
 
-  
+    #read the width and height of the canvas
+    @width = canvas.width
+    @height = canvas.height
+
+    imageData = @context.createImageData(@width, @height)
+    @context.putImageData imageData, 0, 0
+    #Assigns the texture
+    FW.screenTexture = new THREE.Texture canvas
+
+    #wrap the texture so we have 'infinite' data 
+    FW.screenTexture.wrapS = FW.screenTexture.wrapT = THREE.RepeatWrapping
+
+    @pixels = FW.frequencyBinCount / 4
+    pixelsRoot = Math.pow FW.frequencyBinCount, 0.5
+
+    @layoutScreens()
+
+
+  #Sets pixel data to the image data
+  setPixel: (imageData, x, y, r, g, b, a) ->
+    index = (x+ y * imageData.width) * 4
+    imageData.data[index + 0] = r
+    imageData.data[index + 1] = g
+    imageData.data[index + 2] = b
+    imageData.data[index + 3] = a
+
+  layoutScreens: ->
+    for i in [0...10]
+      xPos = map(i, 0, 10, -100, 100)
+      position = new THREE.Vector3 xPos, 0, 0
+      screen = new FW.Screen(position)
     
+
+  update: ->
+    #creates the image data 
+    imageData = @context.createImageData @width, @height
+
+    #Transfer audio data to rgb values. 
+    #It would be shitty and silly- shilly- to do this for every single screen
+    for i in [0...@pixels]
+      x = i
+      y = 0
+      r = FW.freqByteData[i] | 0
+      g = FW.freqByteData[i+1] | 0
+      b = FW.freqByteData[i+2] | 0
+      a = FW.freqByteData[i+3]| 0
+      @setPixel imageData, x, y, r, g, b, a
+
+    @context.putImageData imageData, 0, 0
+
+    #updates the texture
+    FW.screenTexture.needsUpdate = true
+
 
  
