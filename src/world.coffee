@@ -49,6 +49,15 @@ FW.World = class World
       @onWindowResize()
     ), false
 
+    document.onclick =  (e)=>
+      x = e.pageX/window.innerWidth
+      y = e.pageY/window.innerHeight
+      console.log 'x', x
+      console.log 'y', y
+      for screen in @screens.screens
+        screen.uniforms.mouse.value.set rnd(.23, .7375), rnd(.48, 1)
+
+
     FW.scene.simulate()
 
   initSceneObjects: ->

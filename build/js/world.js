@@ -39,6 +39,20 @@ FW.World = World = (function() {
     window.addEventListener("resize", (function() {
       return _this.onWindowResize();
     }), false);
+    document.onclick = function(e) {
+      var screen, x, y, _i, _len, _ref, _results;
+      x = e.pageX / window.innerWidth;
+      y = e.pageY / window.innerHeight;
+      console.log('x', x);
+      console.log('y', y);
+      _ref = _this.screens.screens;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        screen = _ref[_i];
+        _results.push(screen.uniforms.mouse.value.set(rnd(.23, .7375), rnd(.48, 1)));
+      }
+      return _results;
+    };
     FW.scene.simulate();
   }
 

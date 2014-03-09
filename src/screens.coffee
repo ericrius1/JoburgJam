@@ -2,6 +2,7 @@
 #Can every screen use the same basic material??
 FW.Screens = class Screens
   constructor: ->
+    @screens = []
     #create a canvas element
     canvas = document.getElementById('textureData')
     @context = canvas.getContext('2d')
@@ -24,6 +25,7 @@ FW.Screens = class Screens
     @layoutScreens()
 
 
+
   #Sets pixel data to the image data
   setPixel: (imageData, x, y, r, g, b, a) ->
     index = (x+ y * imageData.width) * 4
@@ -36,7 +38,8 @@ FW.Screens = class Screens
     for i in [0...10]
       xPos = map(i, 0, 10, -100, 100)
       position = new THREE.Vector3 xPos, 0, 0
-      screen = new FW.Screen(position)
+      @screens.push new FW.Screen(position)
+
     
 
   update: ->
@@ -58,6 +61,7 @@ FW.Screens = class Screens
 
     #updates the texture
     FW.screenTexture.needsUpdate = true
+
 
 
  

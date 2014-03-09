@@ -1,4 +1,11 @@
 #Just hanle one screen as physics mesh
+
+
+# ytop: .48
+# ybottom: 1
+
+# xleft: .23
+# xright: .7375
 FW.Screen = class Screen
   constructor: (position)->
 

@@ -3,6 +3,7 @@ var Screens;
 FW.Screens = Screens = (function() {
   function Screens() {
     var canvas, imageData, pixelsRoot;
+    this.screens = [];
     canvas = document.getElementById('textureData');
     this.context = canvas.getContext('2d');
     this.width = canvas.width;
@@ -26,12 +27,12 @@ FW.Screens = Screens = (function() {
   };
 
   Screens.prototype.layoutScreens = function() {
-    var i, position, screen, xPos, _i, _results;
+    var i, position, xPos, _i, _results;
     _results = [];
     for (i = _i = 0; _i < 10; i = ++_i) {
       xPos = map(i, 0, 10, -100, 100);
       position = new THREE.Vector3(xPos, 0, 0);
-      _results.push(screen = new FW.Screen(position));
+      _results.push(this.screens.push(new FW.Screen(position)));
     }
     return _results;
   };
