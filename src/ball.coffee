@@ -6,7 +6,7 @@ FW.Ball= class Ball
     ballMaterial = Physijs.createMaterial \
       new THREE.MeshBasicMaterial(color: color)
       , .2 # low friction
-      , 1.0 # bouncy as shit!!
+      , 0
     @ball = new Physijs.SphereMesh sphereGeometry, ballMaterial, undefined
     @ball.position = @position
     FW.scene.add @ball

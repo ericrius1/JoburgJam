@@ -8,6 +8,7 @@
 # xright: .7375
 FW.Screen = class Screen
   constructor: (position)->
+    @timeSinceLastCollision = 0
     @spiceRange = 
       startX: .23
       startY: .7375
@@ -32,7 +33,7 @@ FW.Screen = class Screen
     screenMaterial = Physijs.createMaterial \
       material
       ,1.0 # friction
-      ,0.3 #  (bounciness)
+      ,0.0 #  (bounciness)
     
     @screen = new Physijs.BoxMesh \
       FW.screenGeometry

@@ -74,10 +74,10 @@ FW.Screens = Screens = (function() {
     }
     this.context.putImageData(imageData, 0, 0);
     FW.screenTexture.needsUpdate = true;
-    randIndex = Math.floor(rnd(0, 1000));
+    randIndex = Math.floor(rnd(0, 100));
     if (randIndex >= 0 && randIndex < 16) {
       impulse = new THREE.Vector3(0, 2000, 0);
-      offset = this.screens[randIndex].ball.position.clone();
+      offset = new THREE.Vector3();
       return this.screens[randIndex].ball.ball.applyImpulse(impulse, offset);
     }
   };

@@ -116,10 +116,10 @@ FW.Screens = class Screens
     FW.screenTexture.needsUpdate = true
 
     #picks a ball to add impulse to
-    randIndex = Math.floor (rnd(0, 1000))
+    randIndex = Math.floor (rnd(0, 100))
     if randIndex >=0 and randIndex < 16
       impulse = new THREE.Vector3(0, 2000, 0)
-      offset = @screens[randIndex].ball.position.clone()
+      offset = new THREE.Vector3()
       @screens[randIndex].ball.ball.applyImpulse impulse, offset
 
 

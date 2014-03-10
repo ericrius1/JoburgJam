@@ -4,6 +4,7 @@ FW.Screen = Screen = (function() {
   function Screen(position) {
     var h, handleCollision, material, screenMaterial, w,
       _this = this;
+    this.timeSinceLastCollision = 0;
     this.spiceRange = {
       startX: .23,
       startY: .7375,
@@ -36,7 +37,7 @@ FW.Screen = Screen = (function() {
       vertexShader: document.getElementById('vertexShader').textContent,
       fragmentShader: document.getElementById('fragmentShader1').textContent
     });
-    screenMaterial = Physijs.createMaterial(material, 1.0, 0.3);
+    screenMaterial = Physijs.createMaterial(material, 1.0, 0.0);
     this.screen = new Physijs.BoxMesh(FW.screenGeometry, screenMaterial, 0);
     this.screen.position = position;
     FW.scene.add(this.screen);
