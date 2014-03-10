@@ -30,29 +30,38 @@ FW.Screens = Screens = (function() {
   };
 
   Screens.prototype.layoutScreens = function() {
-    var position, startingXPos, startingZPos, x, xPos, z, zPos, _i, _ref, _results;
+    var geometry, material, position, side, startingXPos, startingZPos, x, xPos, z, zPos, _i, _j, _ref, _ref1;
     startingXPos = -40;
     startingZPos = -40;
-    _results = [];
     for (x = _i = 0, _ref = this.numUnitsAcross; 0 <= _ref ? _i < _ref : _i > _ref; x = 0 <= _ref ? ++_i : --_i) {
-      _results.push((function() {
-        var _j, _ref1, _results1;
-        _results1 = [];
-        for (z = _j = 0, _ref1 = this.numUnitsAcross; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; z = 0 <= _ref1 ? ++_j : --_j) {
-          xPos = startingXPos + (x * this.screenSize);
-          console.log('xPos', xPos);
-          zPos = startingZPos + (z * this.screenSize);
-          position = new THREE.Vector3(xPos, 0, zPos);
-          _results1.push(this.screens.push(new FW.Screen(position)));
-        }
-        return _results1;
-      }).call(this));
+      for (z = _j = 0, _ref1 = this.numUnitsAcross; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; z = 0 <= _ref1 ? ++_j : --_j) {
+        xPos = startingXPos + (x * this.screenSize);
+        console.log('xPos', xPos);
+        zPos = startingZPos + (z * this.screenSize);
+        position = new THREE.Vector3(xPos, 0, zPos);
+        this.screens.push(new FW.Screen(position));
+      }
     }
-    return _results;
+    material = Physijs.createMaterial(new THREE.MeshNormalMaterial(), .4, 0.3);
+    geometry = new THREE.CubeGeometry(1, 100, 100);
+    side = new Physijs.BoxMesh(geometry, material, 0);
+    side.position.x = 30;
+    FW.scene.add(side);
+    side = new Physijs.BoxMesh(geometry, material, 0);
+    side.position.x = -50;
+    FW.scene.add(side);
+    side = new Physijs.BoxMesh(geometry, material, 0);
+    side.position.z = 30;
+    side.rotation.y = Math.PI / 2;
+    FW.scene.add(side);
+    side = new Physijs.BoxMesh(geometry, material, 0);
+    side.position.z = -50;
+    side.rotation.y = Math.PI / 2;
+    return FW.scene.add(side);
   };
 
   Screens.prototype.update = function() {
-    var a, b, g, i, imageData, r, x, y, _i, _ref;
+    var a, b, g, i, imageData, impulse, offset, r, randIndex, x, y, _i, _ref;
     imageData = this.context.createImageData(this.width, this.height);
     for (i = _i = 0, _ref = this.pixels; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
       x = i;
@@ -64,7 +73,13 @@ FW.Screens = Screens = (function() {
       this.setPixel(imageData, x, y, r, g, b, a);
     }
     this.context.putImageData(imageData, 0, 0);
-    return FW.screenTexture.needsUpdate = true;
+    FW.screenTexture.needsUpdate = true;
+    randIndex = Math.floor(rnd(0, 1000));
+    if (randIndex >= 0 && randIndex < 16) {
+      impulse = new THREE.Vector3(0, 2000, 0);
+      offset = this.screens[randIndex].ball.position.clone();
+      return this.screens[randIndex].ball.ball.applyImpulse(impulse, offset);
+    }
   };
 
   return Screens;

@@ -5,6 +5,8 @@ FW.Screens = class Screens
     @screens = []
     @screenSize = 20
     @numUnitsAcross = 4
+
+    #SCREEN GEOMETRY
     FW.screenGeometry = new THREE.CubeGeometry(@screenSize, 1, @screenSize)
     #create a canvas element
     canvas = document.getElementById('textureData')
@@ -49,6 +51,49 @@ FW.Screens = class Screens
         position = new THREE.Vector3 xPos, 0, zPos
         @screens.push new FW.Screen(position)
 
+    #SIDES
+
+    material = Physijs.createMaterial \
+      new THREE.MeshNormalMaterial()
+      ,.4
+      ,0.3 
+    geometry = new THREE.CubeGeometry 1, 100, 100
+    #right side
+
+    side = new Physijs.BoxMesh \
+      geometry
+      ,material
+      ,0 # mass
+    side.position.x = 30
+    FW.scene.add side
+
+    #left side 
+    side = new Physijs.BoxMesh \
+      geometry
+      ,material
+      ,0 #mass
+    side.position.x = -50
+    FW.scene.add side
+
+    #front side
+    side = new Physijs.BoxMesh \
+      geometry
+      ,material
+      ,0 #mass
+    side.position.z = 30
+    side.rotation.y  = Math.PI/2
+    FW.scene.add side
+
+    #back side
+    side = new Physijs.BoxMesh \
+      geometry
+      ,material
+      ,0 #mass
+    side.position.z = -50 
+    side.rotation.y = Math.PI/2
+    FW.scene.add side
+
+
     
   update: ->
     #creates the image data 
@@ -69,6 +114,13 @@ FW.Screens = class Screens
 
     #updates the texture
     FW.screenTexture.needsUpdate = true
+
+    #picks a ball to add impulse to
+    randIndex = Math.floor (rnd(0, 1000))
+    if randIndex >=0 and randIndex < 16
+      impulse = new THREE.Vector3(0, 2000, 0)
+      offset = @screens[randIndex].ball.position.clone()
+      @screens[randIndex].ball.ball.applyImpulse impulse, offset
 
 
 

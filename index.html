@@ -35,7 +35,7 @@
 
 
         uniform vec2 resolution;
-        uniform vec2 mouse;
+        uniform vec2 spice;
 
         //Audio, passed through via texture
         uniform sampler2D texture;
@@ -51,8 +51,8 @@
           v.y = abs((vUv.y - 0.5)*2.0);
 
           float pi2 = 3.1415926535 * 2.0;
-          float cx = cos(mouse.x * pi2);
-          float cy = sin(mouse.y * pi2);
+          float cx = cos(spice.x * pi2);
+          float cy = sin(spice.y * pi2);
 
           float z = 0.0;
       

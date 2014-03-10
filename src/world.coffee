@@ -9,8 +9,8 @@ FW.World = class World
     FW.bodies= []
 
     # CAMERA
-    FW.camera = new THREE.PerspectiveCamera(45.0, @SCREEN_WIDTH / @SCREEN_HEIGHT, 1, @camFar)
-    FW.camera.position.set 0, 50, 100
+    FW.camera = new THREE.PerspectiveCamera(60.0, @SCREEN_WIDTH / @SCREEN_HEIGHT, 1, @camFar)
+    FW.camera.position.set 0, 30, 30
 
     @controls = new THREE.TrackballControls(FW.camera)
 
@@ -31,7 +31,7 @@ FW.World = class World
     Physijs.scripts.ammo = '/lib/physijs/ammo.js';
     # SCENE 
     FW.scene = new Physijs.Scene()
-    FW.scene.setGravity(new THREE.Vector3( 0, -60, 0 ));
+    FW.scene.setGravity(new THREE.Vector3( 0, -90, 0 ));
     FW.scene.addEventListener 'update', =>
       # args: timestep, maxSubsteps
       FW.scene.simulate undefined, 2
@@ -48,14 +48,6 @@ FW.World = class World
     window.addEventListener "resize", (=>
       @onWindowResize()
     ), false
-
-    document.onclick =  (e)=>
-      x = e.pageX/window.innerWidth
-      y = e.pageY/window.innerHeight
-      console.log 'x', x
-      console.log 'y', y
-      for screen in @screens.screens
-        screen.uniforms.mouse.value.set rnd(.23, .7375), rnd(.48, 1)
 
 
     FW.scene.simulate()

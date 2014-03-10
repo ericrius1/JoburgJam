@@ -1,5 +1,7 @@
 #Multiplayer - have users stomp and dance an create ripples from point they hit
 #energy soccer
+
+#Balls collide mix colors!! WHAAAATTT
 if !Detector.webgl
    Detector.addGetWebGLMessage()
 
@@ -13,7 +15,7 @@ SC?.initialize({
 });
 
 FW.globalTick = 0.16
-window.soundOff = false
+window.soundOff = true
 
 window.onload = ->
   FW.audio = new FW.Audio()

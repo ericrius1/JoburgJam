@@ -11,8 +11,8 @@ FW.World = World = (function() {
     this.camFar = 200000;
     FW.audio.masterGain.value = 1;
     FW.bodies = [];
-    FW.camera = new THREE.PerspectiveCamera(45.0, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 1, this.camFar);
-    FW.camera.position.set(0, 50, 100);
+    FW.camera = new THREE.PerspectiveCamera(60.0, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 1, this.camFar);
+    FW.camera.position.set(0, 30, 30);
     this.controls = new THREE.TrackballControls(FW.camera);
     this.controls.rotateSpeed = 1.0;
     this.controls.zoomSpeed = 1.2;
@@ -25,7 +25,7 @@ FW.World = World = (function() {
     Physijs.scripts.worker = '/lib/physijs/physijs_worker.js';
     Physijs.scripts.ammo = '/lib/physijs/ammo.js';
     FW.scene = new Physijs.Scene();
-    FW.scene.setGravity(new THREE.Vector3(0, -60, 0));
+    FW.scene.setGravity(new THREE.Vector3(0, -90, 0));
     FW.scene.addEventListener('update', function() {
       FW.scene.simulate(void 0, 2);
       return _this.physics_stats.update();
@@ -39,20 +39,6 @@ FW.World = World = (function() {
     window.addEventListener("resize", (function() {
       return _this.onWindowResize();
     }), false);
-    document.onclick = function(e) {
-      var screen, x, y, _i, _len, _ref, _results;
-      x = e.pageX / window.innerWidth;
-      y = e.pageY / window.innerHeight;
-      console.log('x', x);
-      console.log('y', y);
-      _ref = _this.screens.screens;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        screen = _ref[_i];
-        _results.push(screen.uniforms.mouse.value.set(rnd(.23, .7375), rnd(.48, 1)));
-      }
-      return _results;
-    };
     FW.scene.simulate();
   }
 
